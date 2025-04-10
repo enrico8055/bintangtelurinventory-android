@@ -1,0 +1,72 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.example.bintangtelurinventory'
+    compileSdk 33
+
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (it.requested.group == "org.jetbrains.kotlin") {
+                it.useVersion("1.8.10")
+            }
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.example.bintangtelurinventory"
+        minSdk 27
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'com.google.api:api-common:2.2.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.firebase:firebase-database:20.0.4'
+    implementation 'com.google.firebase:firebase-firestore:24.1.1'
+    implementation 'com.google.firebase:firebase-auth:21.0.3'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
+    implementation 'androidx.activity:activity:1.7.2'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //    library itextpdf
+    implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.karumi:dexter:5.0.0'
+
+    //library edittext validation
+    implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
+
+    //library generate barcode
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+
+    //barcode scanner play service vision
+    implementation 'com.google.android.gms:play-services-vision:15.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //library esc/pos untuk langsung print direct ke printer esc/pos
+    implementation project(path: ':escposprinter')
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+    <item
+        android:title="Transaksi">
+            <menu>
+        <item
+            android:id="@+id/menu_penjualan"
+            android:icon="@drawable/penjualan"
+            android:title="Penjualan"/>
+        <item
+            android:id="@+id/menu_hutang"
+            android:icon="@drawable/penjualan"
+            android:title="Hutang"
+            android:visible="false"
+            />
+        <item
+            android:id="@+id/menu_pembelian"
+            android:icon="@drawable/pembelian"
+            android:title="Pembelian"
+            android:visible="false"
+            />
+
+        </menu>
+    </item>
+
+    <item
+        android:title="Master" >
+        <menu>
+            <item
+                android:id="@+id/menu_pelanggan"
+                android:icon="@drawable/pelanggan"
+                android:title="Pelanggan"/>
+
+            <item
+                android:id="@+id/menu_supplier"
+                android:icon="@drawable/pelanggan"
+                android:title="Supplier"/>
+
+            <item
+                android:id="@+id/menu_barang"
+                android:icon="@drawable/barang"
+                android:title="Barang"/>
+        </menu>
+    </item>
+    <item
+        android:title="Other" >
+        <menu>
+            <item
+                android:id="@+id/menu_laporan"
+                android:icon="@drawable/laporan"
+                android:title="Laporan"/>
+        </menu>
+    </item>
+    <item
+        android:title="Tools" >
+        <menu>
+            <item
+                android:id="@+id/menu_logout"
+                android:icon="@drawable/logout"
+                android:title="Logout"/>
+        </menu>
+    </item>
+</menu>
