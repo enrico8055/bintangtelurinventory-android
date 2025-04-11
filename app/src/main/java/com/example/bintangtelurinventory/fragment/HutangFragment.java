@@ -21,7 +21,7 @@ import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
 import com.example.bintangtelurinventory.activity.RinciPenjualanActivity;
 import com.example.bintangtelurinventory.activity.ScanBarcodeActivity;
-import com.example.bintangtelurinventory.adapter.RecyclerAdapterPenjualan;
+import com.example.bintangtelurinventory.adapter.RecyclerAdapterHutang;
 import com.example.bintangtelurinventory.modeldata.Penjualan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.EventListener;
@@ -64,12 +64,12 @@ public class HutangFragment extends Fragment {
         rv_penjualan.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        RecyclerAdapterPenjualan adapter = new RecyclerAdapterPenjualan();
+        RecyclerAdapterHutang adapter = new RecyclerAdapterHutang();
         rv_penjualan.setAdapter(adapter);
 
 
         //event click per data di recycler view untuk update datanya
-        adapter.setOnItemClickListener(new RecyclerAdapterPenjualan.OnItemClickListener() {
+        adapter.setOnItemClickListener(new RecyclerAdapterHutang.OnItemClickListener() {
             @Override
             public void onItemClick(Penjualan penjualan) {
 //                //buuka activity
@@ -135,7 +135,8 @@ public class HutangFragment extends Fragment {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
-        et_search.setText(formatter.format(date));
+        et_search.setText("SEMUA HUTANG");
+//        et_search.setText(formatter.format(date));
 
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override

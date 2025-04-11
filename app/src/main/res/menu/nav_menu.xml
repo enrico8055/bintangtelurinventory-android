@@ -15,7 +15,7 @@
             android:id="@+id/menu_hutang"
             android:icon="@drawable/penjualan"
             android:title="Hutang"
-            android:visible="false"
+            android:visible="true"
             />
         <item
             android:id="@+id/menu_pembelian"
