@@ -248,7 +248,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:backgroundTint="@color/design_default_color_error"
-                    android:text="hapus penjualan"
+                    android:text="hapus"
                     android:textColor="@color/white" />
             </LinearLayout>
 
