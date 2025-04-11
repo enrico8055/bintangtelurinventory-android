@@ -63,6 +63,8 @@ public class HutangFragment extends Fragment {
         et_search = view.findViewById(R.id.et_search);
         rv_penjualan.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        btn_newpenjualan.setVisibility(View.INVISIBLE);
+
 
         RecyclerAdapterHutang adapter = new RecyclerAdapterHutang();
         rv_penjualan.setAdapter(adapter);

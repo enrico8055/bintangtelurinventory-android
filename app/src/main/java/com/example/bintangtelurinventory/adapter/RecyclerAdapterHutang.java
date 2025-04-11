@@ -132,6 +132,20 @@ public class RecyclerAdapterHutang extends RecyclerView.Adapter<RecyclerAdapterH
                                             formatRp.setGroupingSeparator('.');
                                             kursIndonesia.setDecimalFormatSymbols(formatRp);
                                             holder.tv_totalharga.setText("Terhutang:\n"+kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))));
+
+                                            if (totalHarga.get() == 0.0) {
+                                                holder.itemView.setVisibility(View.GONE);
+                                                db.collection("penjualan")
+                                                        .document(curr.getIdpenjualan().trim())
+                                                        .update(
+                                                                "lunas", "ya",
+                                                                "titip", "0"
+                                                        )
+                                                        .addOnSuccessListener(aVoid -> {
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                        });
+                                            }
                                         }
                                     }
                                 });

@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //ambil statusapp untuk memastikan apakah app ini sudah usang
-        db.collection("statusApp").whereEqualTo("v9", true)
+        db.collection("statusApp").whereEqualTo("v10", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
