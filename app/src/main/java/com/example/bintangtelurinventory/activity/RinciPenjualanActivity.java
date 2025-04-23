@@ -90,7 +90,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RinciPenjualanActivity extends AppCompatActivity {
@@ -185,9 +187,9 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
-                        String titip = document.getString("titip");
+                        String titip = NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(document.getString("titip")));
                         if(titip == null){
-                            et_titip.setText("no data!");
+                            et_titip.setText("0");
                         }else {
                             et_titip.setText(titip);
                         }
@@ -209,6 +211,8 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
 
         et_titip.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
@@ -221,28 +225,54 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                delayedAction = () -> {
-                    String titip;
-                    if (et_titip.getText().toString().isEmpty() ||
-                            !et_titip.getText().toString().matches("\\d+(\\.\\d+)?") ||
-                            Double.parseDouble(et_titip.getText().toString()) < 0) {
-                        titip = "0";
-                    } else {
-                        titip = et_titip.getText().toString();
+                String input = editable.toString();
+
+                if (!input.equals(current)) {
+                    et_titip.removeTextChangedListener(this);
+
+                    String cleanString = input.replaceAll("[Rp,.\\s]", "");
+                    if (cleanString.isEmpty()) cleanString = "0";
+
+                    try {
+                        double parsed = Double.parseDouble(cleanString);
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+                        formatter.setMaximumFractionDigits(0);
+                        formatter.setMinimumFractionDigits(0); // just to be safe
+
+                        String formatted = formatter.format(parsed);
+
+                        current = formatted;
+                        et_titip.setText(formatted);
+                        et_titip.setSelection(formatted.length());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                     }
+
+                    et_titip.addTextChangedListener(this);
+                }
+
+                delayedAction = () -> {
+                    String titipClean = et_titip.getText().toString().replaceAll("[Rp,.\\s]", "");
+                    if (titipClean.isEmpty() || titipClean.equals("null")) titipClean = "0";
+
+                    try {
+                        double value = Double.parseDouble(titipClean);
+                        if (value < 0) titipClean = "0";
+                    } catch (NumberFormatException e) {
+                        titipClean = "0";
+                    }
+
                     db.collection("penjualan")
                             .document(idpenjualan.trim())
-                            .update(
-                                    "titip", titip
-                            )
-                            .addOnSuccessListener(aVoid -> {
-                            })
-                            .addOnFailureListener(e -> {
-                            });
+                            .update("titip", titipClean)
+                            .addOnSuccessListener(aVoid -> { /* success */ })
+                            .addOnFailureListener(e -> { e.printStackTrace(); });
                 };
+
                 handler.postDelayed(delayedAction, 3000);
             }
         });
+
 
         cb_lunas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

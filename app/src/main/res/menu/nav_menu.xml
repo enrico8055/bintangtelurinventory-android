@@ -9,11 +9,11 @@
             <menu>
         <item
             android:id="@+id/menu_penjualan"
-            android:icon="@drawable/penjualan"
+            android:icon="@drawable/pembelian"
             android:title="Penjualan"/>
         <item
             android:id="@+id/menu_hutang"
-            android:icon="@drawable/penjualan"
+            android:icon="@drawable/laporan"
             android:title="Hutang"
             android:visible="true"
             />
@@ -21,7 +21,7 @@
             android:id="@+id/menu_pembelian"
             android:icon="@drawable/pembelian"
             android:title="Pembelian"
-            android:visible="false"
+            android:visible="true"
             />
 
         </menu>

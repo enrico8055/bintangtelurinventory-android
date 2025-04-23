@@ -30,6 +30,7 @@ import com.example.bintangtelurinventory.modeldata.Pembelian;
 import com.example.bintangtelurinventory.modeldata.Penjualan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -38,6 +39,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -105,20 +107,59 @@ public class PembelianFragment extends Fragment {
                 searchRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        //ambil semua data pembelian
-                        db.collection("pembelian").orderBy("namasupplier", Query.Direction.ASCENDING)
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                        List<Pembelian> data = new ArrayList<Pembelian>();
+                        if (et_search.getText().toString().contains("/")) {//ambil semua data pembelian berdasar tanggal
+                            db.collection("pembelian")
+                                    .whereGreaterThanOrEqualTo("tanggalpembelian", et_search.getText().toString()) // Filter by start date
+                                    .whereLessThanOrEqualTo("tanggalpembelian", et_search.getText().toString())
+                                    .orderBy("tanggalpembelian", Query.Direction.ASCENDING)
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            List<Pembelian> data = new ArrayList<Pembelian>();
 
-                                        for (QueryDocumentSnapshot document : value) {
-                                            if(document.getId().contains(et_search.getText().toString() ) || document.getString("tanggalpembelian").toString().contains(et_search.getText().toString() ) || document.getString("idsupplier").toString().contains(et_search.getText().toString()))
+                                            //sort berdasar nama supplier
+                                            List<QueryDocumentSnapshot> documents = new ArrayList<>();
+                                            for (QueryDocumentSnapshot doc : value) {
+                                                documents.add(doc);
+                                            }
+                                            Collections.sort(documents, (doc1, doc2) ->
+                                                    doc1.getString("namasupplier").compareToIgnoreCase(doc2.getString("namasupplier"))
+                                            );
+
+
+                                            //tampilkan di view
+                                            for (QueryDocumentSnapshot document : documents) {
                                                 data.add(new Pembelian(document.getId(), document.getData().get("tanggalpembelian").toString(), document.getData().get("idsupplier").toString()));
+                                            }
+                                            adapter.setPembelians(data);
                                         }
-                                        adapter.setPembelians(data);
-                                    }
-                                });
+                                    });
+                        }else{ //ambil data pembelian berdasar id document
+                            db.collection("pembelian")
+                                    .whereEqualTo(FieldPath.documentId(), et_search.getText().toString())
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            List<Pembelian> data = new ArrayList<Pembelian>();
+
+                                            //sort berdasar nama supplier
+                                            List<QueryDocumentSnapshot> documents = new ArrayList<>();
+                                            for (QueryDocumentSnapshot doc : value) {
+                                                documents.add(doc);
+                                            }
+                                            Collections.sort(documents, (doc1, doc2) ->
+                                                    doc1.getString("namasupplier").compareToIgnoreCase(doc2.getString("namasupplier"))
+                                            );
+
+
+                                            //tampilkan di view
+                                            for (QueryDocumentSnapshot document : documents) {
+                                                data.add(new Pembelian(document.getId(), document.getData().get("tanggalpembelian").toString(), document.getData().get("idsupplier").toString()));
+                                            }
+                                            adapter.setPembelians(data);
+                                        }
+                                    });
+                        }
                     }
                 };
 

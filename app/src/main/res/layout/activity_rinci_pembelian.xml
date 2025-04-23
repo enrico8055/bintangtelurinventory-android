@@ -50,7 +50,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/print" />
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/tv_idbeli"
@@ -149,7 +149,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/design_default_color_error"
-                android:text="hapus pembelian"
+                android:text="hapus "
                 android:textColor="@color/white" />
         </LinearLayout>
 

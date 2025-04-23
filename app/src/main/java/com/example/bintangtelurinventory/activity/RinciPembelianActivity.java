@@ -66,8 +66,8 @@ public class RinciPembelianActivity extends AppCompatActivity {
     ImageView btn_print;
     TextView tv_idpembelian, tv_tanggaltransaksi, tv_nama;
     String idsupplier, tanggaltransaksi, idpembelian, namasupplier = "???";
-    Integer totalHarga = 0;
-    Integer totalJumlah = 0;
+    Double totalHarga = 0.0;
+    Double totalJumlah = 0.0;
 
     Button btn_ext, btn_delete;
     CheckBox cb_lunas;
@@ -99,7 +99,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
         tv_idpembelian = findViewById(R.id.tv_idbeli);
         tv_tanggaltransaksi = findViewById(R.id.tv_tanggalpembelian);
         tv_nama = findViewById(R.id.tv_nama);
-        tv_idpembelian.setText("ID : " + idpembelian);
+        tv_idpembelian.setText("Lihat Detail Pembelian");
         tv_tanggaltransaksi.setText(tanggaltransaksi);
 
 
@@ -220,7 +220,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
 
                                         //loop hasil query rinci penjualan
                                         for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                            int totalPerItem = Integer.parseInt(document1.getString("jumlah")) * Integer.parseInt(document1.getString("hargasatuan"));
+                                            Double totalPerItem = Double.valueOf(document1.getString("jumlah")) * Double.valueOf(document1.getString("hargasatuan"));
 
                                             //tambahkan 2 text kanan kiri untuk rinci penjualan
                                             Chunk chunk9 = new Chunk(document1.getString("namabarang"), contentFont);
@@ -233,7 +233,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
                                             } catch (DocumentException e) {
                                                 throw new RuntimeException(e);
                                             }
-                                            totalJumlah += Integer.parseInt(document1.getString("jumlah"));
+                                            totalJumlah += Double.valueOf(document1.getString("jumlah"));
                                             totalHarga += totalPerItem;
                                         }
 
@@ -251,7 +251,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
                                         formatRp.setGroupingSeparator('.');
                                         kursIndonesia.setDecimalFormatSymbols(formatRp);
                                         //tambahkan 1 text
-                                        Chunk chunk12 = new Chunk("TOTAL : " + kursIndonesia.format(Integer.parseInt(String.valueOf(totalHarga))), subtitleFont);
+                                        Chunk chunk12 = new Chunk("TOTAL : " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))), subtitleFont);
                                         Paragraph paragraph12 = new Paragraph(chunk12);
                                         paragraph12.setAlignment(Element.ALIGN_RIGHT);
                                         document.add(paragraph12);
@@ -271,8 +271,8 @@ public class RinciPembelianActivity extends AppCompatActivity {
 //                                            document.add(paragraph13);
 //                                        }
 
-                                        totalHarga = 0;
-                                        totalJumlah = 0;
+                                        totalHarga = 0.0;
+                                        totalJumlah = 0.0;
 
                                         //tambahkan jarak
                                         document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"));

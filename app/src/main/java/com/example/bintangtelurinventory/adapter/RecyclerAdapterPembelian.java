@@ -31,7 +31,7 @@ public class RecyclerAdapterPembelian extends RecyclerView.Adapter<RecyclerAdapt
 
     private List<Pembelian> pembelians = new ArrayList<>();
     private OnItemClickListener listener;
-    AtomicReference<Integer> totalHarga = new AtomicReference<>(0);
+    AtomicReference<Double> totalHarga = new AtomicReference<>(0.0);
 
 
 
@@ -110,7 +110,7 @@ public class RecyclerAdapterPembelian extends RecyclerView.Adapter<RecyclerAdapt
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot document1 : task.getResult()) {
-                            int totalPerItem = Integer.parseInt(document1.getString("jumlah")) * Integer.parseInt(document1.getString("hargasatuan"));
+                            Double totalPerItem = Double.valueOf(document1.getString("jumlah")) * Double.valueOf(document1.getString("hargasatuan"));
                             totalHarga.updateAndGet(v -> v + totalPerItem);
                         }
                         //UNTUK KASI SEPARATOR TITIK RUPIAH
@@ -120,8 +120,8 @@ public class RecyclerAdapterPembelian extends RecyclerView.Adapter<RecyclerAdapt
                         formatRp.setMonetaryDecimalSeparator(',');
                         formatRp.setGroupingSeparator('.');
                         kursIndonesia.setDecimalFormatSymbols(formatRp);
-                        holder.tv_totalharga.setText(kursIndonesia.format(Integer.parseInt(String.valueOf(totalHarga))));
-                        totalHarga.set(0);
+                        holder.tv_totalharga.setText(kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))));
+                        totalHarga.set(0.0);
 
                     }
                 });

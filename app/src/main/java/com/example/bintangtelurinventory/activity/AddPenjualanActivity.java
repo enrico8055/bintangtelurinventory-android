@@ -21,7 +21,9 @@ import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -90,6 +92,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -177,6 +180,41 @@ public class AddPenjualanActivity extends AppCompatActivity {
             }
         });
 
+        et_titip2.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals(current)) {
+                    et_titip2.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[Rp,.\\s]", "");
+
+                    try {
+                        double parsed = Double.parseDouble(cleanString);
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+                        formatter.setMaximumFractionDigits(0); // remove decimal if needed
+                        String formatted = formatter.format(parsed);
+
+                        current = formatted;
+                        et_titip2.setText(formatted);
+                        et_titip2.setSelection(formatted.length());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+
+                    et_titip2.addTextChangedListener(this);
+                }
+            }
+        });
+
+
         btn_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,7 +270,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
                             data.put("tanggalpenjualan", formatDate(et_tanggal.getText().toString()));
                             data.put("tglpenjualanformatted", tglFormatted);
                             data.put("timestamp", timestamp);
-                            data.put("titip", et_titip2.getText().toString());
+                            data.put("titip", et_titip2.getText().toString().replaceAll("[Rp,.\\s]", ""));
                             if (cb_lunas.isChecked()) {
                                 data.put("lunas", "ya");
                             } else {
@@ -348,12 +386,12 @@ public class AddPenjualanActivity extends AppCompatActivity {
                                                                                                     } else {
                                                                                                         layout += "[R]*belum lunas*" + "\n";
                                                                                                         layout += "\n";
-                                                                                                        if(et_titip2.getText().toString().equals("0") || et_titip2.getText().toString().equals("") || et_titip2.getText().toString() == null){
+                                                                                                        if(et_titip2.getText().toString().replaceAll("[Rp,.\\s]", "").equals("0") || et_titip2.getText().toString().replaceAll("[Rp,.\\s]", "").equals("") || et_titip2.getText().toString().replaceAll("[Rp,.\\s]", "") == null){
 
                                                                                                         }else {
-                                                                                                            layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip2.getText().toString())) + "</font>\n";
+                                                                                                            layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip2.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "</font>\n";
                                                                                                             layout += "\n";
-                                                                                                            layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip2.getText().toString())))) + "</font>" + "\n";
+                                                                                                            layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip2.getText().toString().replaceAll("[Rp,.\\s]", ""))))) + "</font>" + "\n";
                                                                                                         }
                                                                                                     }
                                                                                                     totalHarga = 0.0;
@@ -535,7 +573,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
 
     public void ambilDataDariDialogFragment(ArrayList<String> data){
         rinciPenjualan.add(data);
-        String temp = data.get(3) + " " + data.get(2) + data.get(4) + " @ " + data.get(0) + " :: Rp. " + String.valueOf(Double.valueOf(data.get(2)) * Double.valueOf(data.get(0)));
+        String temp = data.get(3) + " " + data.get(2) + data.get(4) + " @ " + NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(data.get(0))) + " :: Rp. " + NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(String.valueOf(Double.valueOf(data.get(2)) * Double.valueOf(data.get(0)))));
         displayRinciPenjualan.add(temp);
         arrayAdapter.notifyDataSetChanged();
     }

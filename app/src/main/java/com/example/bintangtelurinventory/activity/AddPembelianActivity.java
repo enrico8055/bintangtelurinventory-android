@@ -39,6 +39,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -67,12 +68,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddPembelianActivity extends AppCompatActivity {
@@ -175,11 +178,24 @@ public class AddPembelianActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(!rincipembelian.isEmpty()) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                            Date tgl = null;
+                            try {
+                                tgl = sdf.parse(et_tanggal.getText().toString());
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            SimpleDateFormat firestoreFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                            String tglFormatted = firestoreFormat.format(tgl);
+                            Timestamp timestamp = new Timestamp(tgl);
+
                             //INSERT PEMBELIAN
                             Map<String, Object> data = new HashMap<>();
                             data.put("idsupplier", idsupplier);
                             data.put("namasupplier", namasupplier);
-                            data.put("tanggalpembelian", et_tanggal.getText().toString());
+                            data.put("tanggalpembelian", formatDate(et_tanggal.getText().toString()));
+                            data.put("tglpembelianformatted", tglFormatted);
+                            data.put("timestamp", timestamp);
                             // Add a new document with a generated ID
                             db.collection("pembelian")
                                     .add(data)
@@ -292,9 +308,24 @@ public class AddPembelianActivity extends AppCompatActivity {
         });
     }
 
+    public static String formatDate(String dateStr) {
+        try {
+            // Parse string input ke Date
+            SimpleDateFormat inputFormat = new SimpleDateFormat("d/M/yyyy", Locale.getDefault());
+            Date date = inputFormat.parse(dateStr);
+
+            // Format ulang dengan format dd/MM/yyyy
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void ambilDataDariDialogFragment(ArrayList<String> data){
         rincipembelian.add(data);
-        String temp = data.get(3) + " " + data.get(2) + data.get(4) + " @ " + data.get(0) + " :: Rp. " + String.valueOf(Integer.parseInt(data.get(2)) * Integer.parseInt(data.get(0)));
+        String temp = data.get(3) + " " + data.get(2) + data.get(4) + " @ " + NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(data.get(0))) + " :: Rp. " + NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(String.valueOf(Double.valueOf(data.get(2)) * Double.valueOf(data.get(0)))));
         displayRincipembelian.add(temp);
         arrayAdapter.notifyDataSetChanged();
     }

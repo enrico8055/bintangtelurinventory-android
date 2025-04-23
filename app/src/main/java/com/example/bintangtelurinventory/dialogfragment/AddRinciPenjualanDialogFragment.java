@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +31,10 @@ import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Length;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AddRinciPenjualanDialogFragment extends DialogFragment implements Validator.ValidationListener {
     Button btn_save;
@@ -96,6 +100,41 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
             }
         });
 
+        et_hargasatuan.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals(current)) {
+                    et_hargasatuan.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[Rp,.\\s]", "");
+
+                    try {
+                        double parsed = Double.parseDouble(cleanString);
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+                        formatter.setMaximumFractionDigits(0); // remove decimal if needed
+                        String formatted = formatter.format(parsed);
+
+                        current = formatted;
+                        et_hargasatuan.setText(formatted);
+                        et_hargasatuan.setSelection(formatted.length());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+
+                    et_hargasatuan.addTextChangedListener(this);
+                }
+            }
+        });
+
+
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +158,7 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
     public void onValidationSucceeded() {
         //action btn_save setelah divalidasi edittextnya oleh library
         ArrayList<String > data = new ArrayList<>();
-        data.add(et_hargasatuan.getText().toString());
+        data.add(et_hargasatuan.getText().toString().replaceAll("[Rp,.\\s]", ""));
         data.add(idbarang);
         data.add(et_jumlah.getText().toString());
         data.add(namabarang);
