@@ -91,13 +91,22 @@
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/btn_ambillaporan"
+                android:id="@+id/btn_ambillaporanpenjualan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/blue"
                 android:textColor="@color/white"
-                android:text="Ambil laporan" />
+                android:text="Penjualan" />
+
+            <Button
+                android:id="@+id/btn_ambillaporanpembelian"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="@color/white"
+                android:text="Pembelian" />
 
         </LinearLayout>
 

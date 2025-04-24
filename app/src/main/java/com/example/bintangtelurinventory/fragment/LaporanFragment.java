@@ -51,7 +51,7 @@ import java.util.Locale;
 public class LaporanFragment extends Fragment {
     EditText et_tglawal, et_tglakhir;
     ImageButton btn_tglawal, btn_tglakhir;
-    Button btn_ambillaporan;
+    Button btn_ambillaporanpenjualan, btn_ambillaporanpembelian;
     DatePickerDialog datePickerDialog;
     ArrayList<String> datalaporan = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
@@ -82,7 +82,8 @@ public class LaporanFragment extends Fragment {
         btn_tglakhir = view.findViewById(R.id.btn_tglakhir);
         sp_pelanggan = (Spinner) view.findViewById(R.id.sp_pelanggan);
         lv_laporan = view.findViewById(R.id.lv_laporan);
-        btn_ambillaporan = view.findViewById(R.id.btn_ambillaporan);
+        btn_ambillaporanpenjualan = view.findViewById(R.id.btn_ambillaporanpenjualan);
+        btn_ambillaporanpembelian = view.findViewById(R.id.btn_ambillaporanpembelian);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
@@ -125,7 +126,7 @@ public class LaporanFragment extends Fragment {
             }
         });
 
-        btn_ambillaporan.setOnClickListener(new View.OnClickListener() {
+        btn_ambillaporanpenjualan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 tv_tempData.setText("0");
@@ -317,6 +318,115 @@ public class LaporanFragment extends Fragment {
 
             }
         });
+
+
+        btn_ambillaporanpembelian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv_tempData.setText("0");
+                tv_tempData2.setText("0");
+                tv_tempData3.setText("0");
+                tv_tempData4.setText("0");
+                datalaporan.clear();
+                arrayAdapter.notifyDataSetChanged();
+                datalaporan.add("*Dari " + et_tglawal.getText().toString() + " Sampai " + et_tglakhir.getText().toString() + "*");
+
+                if(true){
+                    tv_judullaporan.setText("Laporan Pembelian Semua Supplier:");
+
+                    String tglAwalFormatted = "";
+                    String tglAkhirFormatted = "";
+                    Date tglAwal = null;
+                    Date tglAkhir = null;
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        tglAwal = sdf.parse(et_tglawal.getText().toString());
+                        tglAkhir = sdf.parse(et_tglakhir.getText().toString());
+                        SimpleDateFormat firestoreFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                        tglAwalFormatted = firestoreFormat.format(tglAwal);
+                        tglAkhirFormatted = firestoreFormat.format(tglAkhir);
+                        Log.d("laporan", "Tgl Awal: " + tglAwalFormatted);
+                        Log.d("laporan", "Tgl Akhir: " + tglAkhirFormatted);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Timestamp timestampawal = new Timestamp(tglAwal);
+                    Timestamp timestampakhir = new Timestamp(tglAkhir);
+
+
+
+                    db.collection("pembelian")
+                            .whereGreaterThanOrEqualTo("timestamp", timestampawal) // Filter by start date
+                            .whereLessThanOrEqualTo("timestamp", timestampakhir) // Filter by end date
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (!task.isSuccessful()) return;
+
+                                    Log.d("laporan", "Mulai perhitungan pembelian...");
+
+                                    List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+                                    int[] countJmlPenjualan = {0};
+
+                                    for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                        countJmlPenjualan[0]++;
+                                        tasks.add(db.collection("rincipembelian")
+                                                .whereEqualTo("idpembelian", document1.getId()) // Fetch only matching rincian
+                                                .get());
+                                    }
+
+                                    // 🔹 Step 2: Process `rincipembelian` Data Efficiently
+                                    Tasks.whenAllComplete(tasks).addOnCompleteListener(t -> {
+                                        double totalPenjualan = 0.0, totalTelur = 0.0;
+
+                                        Log.d("laporan", "Mulai perhitungan rinci pembelian...");
+
+
+                                        for (Task<QuerySnapshot> rincipembelianTask : tasks) {
+                                            if (!rincipembelianTask.isSuccessful()) continue;
+
+                                            for (QueryDocumentSnapshot document2 : rincipembelianTask.getResult()) {
+                                                String namaBarang = document2.getString("namabarang");
+                                                if (namaBarang != null && (namaBarang.toLowerCase().contains("telur") || namaBarang.toLowerCase().contains("telor"))) {
+                                                    double jumlah = Double.parseDouble(document2.getString("jumlah"));
+                                                    double harga = Double.parseDouble(document2.getString("hargasatuan"));
+                                                    totalPenjualan += jumlah * harga;
+                                                    totalTelur += jumlah;
+                                                }
+                                            }
+                                        }
+
+                                        tv_tempData.setText(String.valueOf(totalPenjualan));
+                                        tv_tempData2.setText(String.valueOf(totalTelur));
+
+                                        // 🔹 Step 3: Update UI Efficiently (Only Once)
+                                        datalaporan.clear(); // Avoid duplicate data
+                                        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+                                        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+                                        formatRp.setCurrencySymbol("Rp. ");
+                                        formatRp.setMonetaryDecimalSeparator(',');
+                                        formatRp.setGroupingSeparator('.');
+                                        kursIndonesia.setDecimalFormatSymbols(formatRp);
+
+                                        datalaporan.add("Total Pembelian Telur: " + kursIndonesia.format(totalPenjualan));
+                                        datalaporan.add("Total Telur Terbeli : " + totalTelur + "kg");
+                                        datalaporan.add("Total Transaksi Pembelian : " + countJmlPenjualan[0] + "x");
+
+                                        arrayAdapter.notifyDataSetChanged();
+                                    });
+                                    Log.d("laporan", "Total transaksi ditemukan: " + countJmlPenjualan[0]);
+
+                                }
+                            });
+
+
+
+                }
+
+            }
+        });
+
 
         btn_tglawal.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -211,6 +211,7 @@ public class AddPembelianActivity extends AppCompatActivity {
                                                 data1.put("jumlah", e.get(2));
                                                 data1.put("namabarang", e.get(3));
                                                 data1.put("satuan", e.get(4));
+                                                data1.put("timestamp", timestamp);
                                                 // Add a new document with a generated ID
                                                 db.collection("rincipembelian")
                                                         .add(data1)
