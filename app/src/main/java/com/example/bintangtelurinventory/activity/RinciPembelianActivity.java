@@ -81,7 +81,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rinci_pembelian);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue)));
-        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\">" + "Cetak Pembelian" + "</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"#ffffff\">" + "Detail Pembelian" + "</font>"));
 
         //INIT
         btn_print = findViewById(R.id.btn_print);
@@ -146,11 +146,12 @@ public class RinciPembelianActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     //ambil alamat storage aplikasi ini di external storage android, kalo blm ada maka buat foldernya
                                     String path;
-                                    File dir = new File("storage/self/primary/Download/" + RinciPembelianActivity.this.getResources().getString(R.string.app_name) + "/");
-                                    if (!dir.exists()){
-                                        dir.mkdir();
+                                    File dir = new File(getFilesDir(), getResources().getString(R.string.app_name)); // <-- diperbaiki di sini
+                                    if (!dir.exists()) {
+                                        dir.mkdirs(); // mkdirs lebih aman
                                     }
-                                    path = dir.getPath() + File.separator;
+                                    path = new File(dir, "pembelian.pdf").getAbsolutePath(); // path lengkap ke file PDF
+
 
                                     //kalo lokasi pathnya sudah siap maka ..
                                     if (new File(path).exists())
@@ -274,40 +275,40 @@ public class RinciPembelianActivity extends AppCompatActivity {
                                         totalHarga = 0.0;
                                         totalJumlah = 0.0;
 
-                                        //tambahkan jarak
-                                        document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"));
-
-                                        //tambahkan barcode
-                                        MultiFormatWriter mWriter = new MultiFormatWriter();
-                                        try {
-                                            //BitMatrix class to encode entered text and set Width & Height
-                                            BitMatrix mMatrix = mWriter.encode(idpembelian.toString().trim(), BarcodeFormat.QR_CODE, 400, 400);
-                                            BarcodeEncoder mEncoder = new BarcodeEncoder();
-                                            Bitmap mBitmap = mEncoder.createBitmap(mMatrix);//creating bitmap of code
-                                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                            Image img = null;
-                                            byte[] byteArray = stream.toByteArray();
-                                            try {
-                                                img = Image.getInstance(byteArray);
-                                            } catch (
-                                                    BadElementException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                            img.setAlignment(Image.ALIGN_CENTER);
-                                            document.add(img);
-                                        }catch (WriterException e) {
-
-                                            e.printStackTrace();
-                                        }
-
-                                        //tambahkan 1 text
-                                        Chunk chunk13 = new Chunk("LAYANAN KONSUMEN \n HUB. (+62)87749596976 \n enrico.aurelius@gmail.com", subtitleFont);
-                                        Paragraph paragraph13 = new Paragraph(chunk13);
-                                        paragraph13.setAlignment(Element.ALIGN_CENTER);
-                                        document.add(paragraph13);
+//                                        //tambahkan jarak
+//                                        document.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"));
+//
+//                                        //tambahkan barcode
+//                                        MultiFormatWriter mWriter = new MultiFormatWriter();
+//                                        try {
+//                                            //BitMatrix class to encode entered text and set Width & Height
+//                                            BitMatrix mMatrix = mWriter.encode(idpembelian.toString().trim(), BarcodeFormat.QR_CODE, 400, 400);
+//                                            BarcodeEncoder mEncoder = new BarcodeEncoder();
+//                                            Bitmap mBitmap = mEncoder.createBitmap(mMatrix);//creating bitmap of code
+//                                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                                            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                                            Image img = null;
+//                                            byte[] byteArray = stream.toByteArray();
+//                                            try {
+//                                                img = Image.getInstance(byteArray);
+//                                            } catch (
+//                                                    BadElementException e) {
+//                                                e.printStackTrace();
+//                                            } catch (IOException e) {
+//                                                e.printStackTrace();
+//                                            }
+//                                            img.setAlignment(Image.ALIGN_CENTER);
+//                                            document.add(img);
+//                                        }catch (WriterException e) {
+//
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                        //tambahkan 1 text
+//                                        Chunk chunk13 = new Chunk("LAYANAN KONSUMEN \n HUB. (+62)87749596976 \n enrico.aurelius@gmail.com", subtitleFont);
+//                                        Paragraph paragraph13 = new Paragraph(chunk13);
+//                                        paragraph13.setAlignment(Element.ALIGN_CENTER);
+//                                        document.add(paragraph13);
 
                                         document.close();
                                         try{

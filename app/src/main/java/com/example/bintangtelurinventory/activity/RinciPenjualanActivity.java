@@ -500,7 +500,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
                                         }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString()+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString()))+"*", statusFont);
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
@@ -723,7 +723,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
                                         }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString()+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString()))+"*", statusFont);
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
@@ -907,12 +907,12 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                             } else {
                                                                 layout += "[R]*belum lunas(r)*" + "\n";
                                                                 layout += "\n";
-                                                                if(et_titip.getText().toString().equals("0") || et_titip.getText().toString().equals("") || et_titip.getText().toString() == null){
+                                                                if(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("0") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "") == null){
 
                                                                 }else {
-                                                                    layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip.getText().toString())) + "</font>\n";
+                                                                    layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "</font>\n";
                                                                     layout += "\n";
-                                                                    layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString())))) + "</font>" + "\n";
+                                                                    layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))))) + "</font>" + "\n";
                                                                 }
                                                             }
                                                             totalHarga = 0.0;
