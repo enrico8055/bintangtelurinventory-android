@@ -218,7 +218,7 @@ public class AddPembelianActivity extends AppCompatActivity {
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                             @Override
                                                             public void onSuccess(DocumentReference documentReference) {
-                                                                Toast.makeText(AddPembelianActivity.this, "Berhasil Menambahkan Pembelian! Mencetak Invoice ...", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(AddPembelianActivity.this, "Berhasil Menambahkan Pembelian! ...", Toast.LENGTH_SHORT).show();
                                                                 dialog.dismiss();
                                                                 rincipembelian.clear();
                                                                 displayRincipembelian.clear();

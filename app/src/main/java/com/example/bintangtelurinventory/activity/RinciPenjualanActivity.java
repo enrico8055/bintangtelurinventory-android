@@ -977,6 +977,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                                             if(document.getString("idpenjualan").equals(idpenjualan.trim())){
                                                                 document.getReference().delete();
+                                                                finish();
                                                             }
                                                         }
                                                     }

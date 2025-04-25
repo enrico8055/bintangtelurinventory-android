@@ -123,21 +123,23 @@ public class RecyclerAdapterPembelian extends RecyclerView.Adapter<RecyclerAdapt
                         holder.tv_totalharga.setText(kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))));
                         totalHarga.set(0.0);
 
+                        //ambil nama pelanggan bedasarkan id pelanggan
+                        db.collection("supplier").document(curr.getIdsupplier().trim())
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        //isikan data ke item textviewnya
+                                        holder.tv_tanggaltransaksi.setText(curr.getTanggaltransaksi().toString());
+                                        holder.tv_namasupplier.setText(documentSnapshot.getString("nama"));
+                                        holder.tv_idpembelian.setText(curr.getIdpembelian());
+                                    }
+                                });
+
                     }
                 });
 
-        //ambil nama pelanggan bedasarkan id pelanggan
-        db.collection("supplier").document(curr.getIdsupplier().trim())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //isikan data ke item textviewnya
-                        holder.tv_tanggaltransaksi.setText(curr.getTanggaltransaksi().toString());
-                        holder.tv_namasupplier.setText(documentSnapshot.getString("nama"));
-                        holder.tv_idpembelian.setText(curr.getIdpembelian());
-                    }
-                });
+
     }
 
 

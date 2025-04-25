@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
@@ -51,6 +52,7 @@ public class PenjualanFragment extends Fragment {
     EditText et_search;
     FloatingActionButton btn_newpenjualan;
     Button btn_scan;
+    ProgressBar progressBar;
 
     //panggil firebase databasenya
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -69,6 +71,7 @@ public class PenjualanFragment extends Fragment {
         btn_newpenjualan = view.findViewById(R.id.btn_newpenjualan);
         btn_scan = view.findViewById(R.id.btn_scan);
         et_search = view.findViewById(R.id.et_search);
+        progressBar = view.findViewById(R.id.progressBar);
         rv_penjualan.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
@@ -105,7 +108,8 @@ public class PenjualanFragment extends Fragment {
                 if (searchRunnable != null) {
                     handler.removeCallbacks(searchRunnable); // Remove previous callback if exists
                 }
-
+                rv_penjualan.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
                 searchRunnable = new Runnable() {
                     @Override
                     public void run() {
@@ -134,6 +138,9 @@ public class PenjualanFragment extends Fragment {
                                                 data.add(new Penjualan(document.getId(), document.getData().get("tanggalpenjualan").toString(), document.getData().get("idpelanggan").toString()));
                                             }
                                             adapter.setPenjualans(data);
+
+                                            rv_penjualan.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }else{ //ambil data penjualan berdasar id document
@@ -159,6 +166,9 @@ public class PenjualanFragment extends Fragment {
                                                 data.add(new Penjualan(document.getId(), document.getData().get("tanggalpenjualan").toString(), document.getData().get("idpelanggan").toString()));
                                             }
                                             adapter.setPenjualans(data);
+
+                                            rv_penjualan.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }

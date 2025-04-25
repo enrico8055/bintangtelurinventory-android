@@ -357,6 +357,7 @@ public class RinciPembelianActivity extends AppCompatActivity {
                                                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                                             if(document.getString("idpembelian").equals(idpembelian.trim())){
                                                                 document.getReference().delete();
+                                                                finish();
                                                             }
                                                         }
                                                     }

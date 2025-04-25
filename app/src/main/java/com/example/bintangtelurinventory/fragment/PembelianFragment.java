@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPembelianActivity;
@@ -49,6 +50,8 @@ public class PembelianFragment extends Fragment {
     FloatingActionButton btn_newpembelian;
     Button btn_scan;
 
+    ProgressBar progressBar;
+
     //panggil firebase databasenya
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -67,6 +70,7 @@ public class PembelianFragment extends Fragment {
         btn_newpembelian = view.findViewById(R.id.btn_newpembelian);
         btn_scan = view.findViewById(R.id.btn_scan);
         et_search = view.findViewById(R.id.et_search);
+        progressBar = view.findViewById(R.id.progressBar);
         rv_pembelian.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
@@ -103,7 +107,8 @@ public class PembelianFragment extends Fragment {
                 if (searchRunnable != null) {
                     handler.removeCallbacks(searchRunnable); // Remove previous callback if exists
                 }
-
+                rv_pembelian.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
                 searchRunnable = new Runnable() {
                     @Override
                     public void run() {
@@ -132,6 +137,9 @@ public class PembelianFragment extends Fragment {
                                                 data.add(new Pembelian(document.getId(), document.getData().get("tanggalpembelian").toString(), document.getData().get("idsupplier").toString()));
                                             }
                                             adapter.setPembelians(data);
+
+                                            rv_pembelian.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }else{ //ambil data pembelian berdasar id document
@@ -157,6 +165,9 @@ public class PembelianFragment extends Fragment {
                                                 data.add(new Pembelian(document.getId(), document.getData().get("tanggalpembelian").toString(), document.getData().get("idsupplier").toString()));
                                             }
                                             adapter.setPembelians(data);
+
+                                            rv_pembelian.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }
