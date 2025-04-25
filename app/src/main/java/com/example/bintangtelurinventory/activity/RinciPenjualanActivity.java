@@ -500,7 +500,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
                                         }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString()+" - kurang "+ kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
@@ -723,7 +723,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
                                         }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip Rp. " + et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")+" - kurang Rp. "+ String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString()+" - kurang "+ kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);

@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawer_layout;
     NavigationView navigation_drawer;
@@ -48,11 +51,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
 
+    String apkUrl = "";
+
+
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toast.makeText(this, "v10", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -93,6 +102,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             startActivity(intent);
                             Toast.makeText(MainActivity.this, "Aplikasi usang, silahkan update aplikasi!", Toast.LENGTH_SHORT).show();
                             finish();
+                        }
+                    }
+                });
+
+        // Ambil download URL APK untuk update-nya
+        db.collection("statusApp")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            return;
+                        }
+
+                        if (value != null && !value.isEmpty()) {
+                            for (QueryDocumentSnapshot document : value) {
+                                if (document.contains("download-update-apk-url")) {
+                                    apkUrl = document.getString("download-update-apk-url");
+                                }
+                            }
+                        }else{
                         }
                     }
                 });
@@ -184,34 +213,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawer_layout.close();
                 break;
             case R.id.menu_update:
-                DownloadManager.Request request = new DownloadManager.Request(
-                        Uri.parse("https://designjayaindonesia-my.sharepoint.com/:u:/g/personal/enrico_aureliussalim_kiosbank_co_id/ESejycRHNjxKpp4IDw7ogdkBQM-Csv5ljD_DxXOumcEmTQ?download=1\n") // direct link
-                );
-                request.setTitle("Downloading Update");
-                request.setDescription("Please wait...");
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "update.apk");
+                //DOWNLOAD APK BARUNYA DAN MUNCULKAN POPUP UPDATE KE USER
+                if (apkUrl != null && !apkUrl.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Tunggu bentar lagi download ...", Toast.LENGTH_SHORT).show();
+                    Log.v("enrico", Uri.parse(apkUrl).toString());
 
-                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                long downloadId = manager.enqueue(request);
+                    DownloadManager.Request request = new DownloadManager.Request(
+                            Uri.parse(apkUrl)
+                    );
+                    request.setTitle("Downloading Bintang Telur Update");
+                    request.setDescription("Please wait...");
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bt-update.apk");
 
-                BroadcastReceiver onComplete = new BroadcastReceiver() {
-                    public void onReceive(Context context, Intent intent) {
-                        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                        if (id == downloadId) {
-                            Uri apkUri = manager.getUriForDownloadedFile(downloadId);
+                    DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    long downloadId = manager.enqueue(request);
 
-                            Intent intent2 = new Intent(Intent.ACTION_VIEW);
-                            intent2.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    BroadcastReceiver onComplete = new BroadcastReceiver() {
+                        public void onReceive(Context context, Intent intent) {
+                            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                            if (id == downloadId) {
+                                Uri apkUri = manager.getUriForDownloadedFile(downloadId);
 
-                            context.startActivity(intent2); // Corrected this line
-                            unregisterReceiver(this);
+                                Intent intent2 = new Intent(Intent.ACTION_VIEW);
+                                intent2.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                context.startActivity(intent2); // Corrected this line
+                                unregisterReceiver(this);
+                            }
                         }
-                    }
-                };
+                    };
 
-                registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    break;
+                }else{
+                    Toast.makeText(MainActivity.this, "Maaf belum ada update terbaru ...", Toast.LENGTH_SHORT).show();
+
+                }
+
                 break;
 
             case R.id.menu_logout:
