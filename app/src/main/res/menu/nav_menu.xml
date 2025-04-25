@@ -53,6 +53,10 @@
                 android:id="@+id/menu_laporan"
                 android:icon="@drawable/laporan"
                 android:title="Laporan"/>
+            <item
+                android:id="@+id/menu_update"
+                android:icon="@drawable/share"
+                android:title="Update"/>
         </menu>
     </item>
     <item

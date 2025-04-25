@@ -11,11 +11,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -177,6 +183,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle("Master Supplier");
                 drawer_layout.close();
                 break;
+            case R.id.menu_update:
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse("https://designjayaindonesia-my.sharepoint.com/:u:/g/personal/enrico_aureliussalim_kiosbank_co_id/ESejycRHNjxKpp4IDw7ogdkBQM-Csv5ljD_DxXOumcEmTQ?download=1\n") // direct link
+                );
+                request.setTitle("Downloading Update");
+                request.setDescription("Please wait...");
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "update.apk");
+
+                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                long downloadId = manager.enqueue(request);
+
+                BroadcastReceiver onComplete = new BroadcastReceiver() {
+                    public void onReceive(Context context, Intent intent) {
+                        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                        if (id == downloadId) {
+                            Uri apkUri = manager.getUriForDownloadedFile(downloadId);
+
+                            Intent intent2 = new Intent(Intent.ACTION_VIEW);
+                            intent2.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                            context.startActivity(intent2); // Corrected this line
+                            unregisterReceiver(this);
+                        }
+                    }
+                };
+
+                registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                break;
+
             case R.id.menu_logout:
                 //logout
                 mAuth.signOut();
