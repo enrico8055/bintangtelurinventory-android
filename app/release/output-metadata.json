@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 9,
-      "versionName": "v9",
-      "outputFile": "app-release.apk"
+      "versionCode": 10,
+      "versionName": "v10",
+      "outputFile": "bintang-telur-10.apk"
     }
   ],
   "elementType": "File"

@@ -15,12 +15,23 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appName = "bintang-telur"
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+
+            outputFileName = "${appName}-${versionCode}.apk"
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.bintangtelurinventory"
         minSdk 27
         targetSdk 33
-        versionCode 9
-        versionName "v9"
+        versionCode 10
+        versionName "v10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

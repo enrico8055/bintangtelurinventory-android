@@ -36,9 +36,6 @@
         tools:replace="android:allowBackup"
         tools:targetApi="31">
         <activity
-            android:name=".activity.PDFviewerActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.RinciPembelianActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />
