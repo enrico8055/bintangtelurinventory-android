@@ -44,7 +44,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawer_layout;
     NavigationView navigation_drawer;
     Toolbar toolbar;
@@ -54,14 +54,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String apkUrl = "";
 
 
-
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v10", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v11", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 201);
         } else {
-            
+
         }
 
         //cek dan minta permission notification
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //ambil statusapp untuk memastikan apakah app ini sudah usang
-        db.collection("statusApp").whereEqualTo("v10", true)
+        db.collection("statusApp").whereEqualTo("v11", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         for (QueryDocumentSnapshot document : value) {
                             isEx = true;
                         }
-                        if(isEx == false){
+                        if (isEx == false) {
                             //logout
                             mAuth.signOut();
                             //kembalikan ke activity welcome lagi
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     apkUrl = document.getString("download-update-apk-url");
                                 }
                             }
-                        }else{
+                        } else {
                         }
                     }
                 });
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
 
         //secara default pilih dan tampilkan fragment home di framelayout
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PenjualanFragment()).commit();
             navigation_drawer.setCheckedItem(R.id.menu_penjualan);
             toolbar.setTitle("Penjualan");
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //method yang akan menangkap event click setiap item di navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_penjualan: //kalo menu home di pencet maka pasangkan fragment home ke frame layout dan checked nemu home tersebut di navigation drawer
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PenjualanFragment()).commit();
                 navigation_drawer.setCheckedItem(R.id.menu_penjualan);
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                     break;
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "Maaf belum ada update terbaru ...", Toast.LENGTH_SHORT).show();
 
                 }

@@ -13,7 +13,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true">
+
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -28,6 +30,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <com.github.barteksc.pdfviewer.PDFView
+                android:id="@+id/pdfView"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:nestedScrollingEnabled="true" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -250,7 +258,9 @@
                     android:backgroundTint="@color/design_default_color_error"
                     android:text="hapus"
                     android:textColor="@color/white" />
+
             </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

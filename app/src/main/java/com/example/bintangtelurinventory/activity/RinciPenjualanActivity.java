@@ -7,6 +7,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.github.barteksc.pdfviewer.PDFView;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -41,6 +43,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +118,8 @@ public class RinciPenjualanActivity extends AppCompatActivity {
     Handler handler = new Handler();
     Runnable delayedAction = null;
 
+    ScrollView scrollView;
+    PDFView pdfView;
 
 
     @Override
@@ -171,6 +176,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     ArrayList<String> data = new ArrayList<>();
+
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot document1 : task.getResult()) {
@@ -188,18 +194,18 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
                         String titip = NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(document.getString("titip")));
-                        if(titip == null){
+                        if (titip == null) {
                             et_titip.setText("0");
-                        }else {
+                        } else {
                             et_titip.setText(titip);
                         }
                         String lunas = document.getString("lunas");
-                        if(lunas == null){
+                        if (lunas == null) {
                             cb_lunas.setChecked(false);
-                        }else {
-                            if(lunas.equals("ya")){
+                        } else {
+                            if (lunas.equals("ya")) {
                                 cb_lunas.setChecked(true);
-                            }else{
+                            } else {
                                 cb_lunas.setChecked(false);
                             }
                         }
@@ -214,7 +220,8 @@ public class RinciPenjualanActivity extends AppCompatActivity {
             private String current = "";
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -266,7 +273,9 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                             .document(idpenjualan.trim())
                             .update("titip", titipClean)
                             .addOnSuccessListener(aVoid -> { /* success */ })
-                            .addOnFailureListener(e -> { e.printStackTrace(); });
+                            .addOnFailureListener(e -> {
+                                e.printStackTrace();
+                            });
                 };
 
                 handler.postDelayed(delayedAction, 3000);
@@ -277,7 +286,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
         cb_lunas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(cb_lunas.isChecked()){
+                if (cb_lunas.isChecked()) {
                     et_titip.setVisibility(View.INVISIBLE);
                     tv_titip.setVisibility(View.INVISIBLE);
 
@@ -291,7 +300,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                             })
                             .addOnFailureListener(e -> {
                             });
-                }else{
+                } else {
                     et_titip.setVisibility(View.VISIBLE);
                     tv_titip.setVisibility(View.VISIBLE);
 
@@ -335,7 +344,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         new File(path).delete();
                                     try {
                                         //design isi/kerangka pdfnya
-                                        Document document = new  Document(PageSize.A4);
+                                        Document document = new Document(PageSize.A4);
                                         PdfWriter.getInstance(document, new FileOutputStream(path));
                                         document.open();
 
@@ -362,9 +371,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             imageLogo = Image.getInstance(stream.toByteArray());
                                             imageLogo.scaleAbsolute(30, 30);
                                             imageLogo.setAlignment(Element.ALIGN_CENTER);
-                                        }
-                                        catch(IOException ex)
-                                        {
+                                        } catch (IOException ex) {
                                             return;
                                         }
 
@@ -388,7 +395,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
                                             imgBarcode.setAlignment(Image.ALIGN_LEFT);
-                                        }catch (WriterException e) {
+                                        } catch (WriterException e) {
 
                                             e.printStackTrace();
                                         }
@@ -467,7 +474,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             document.add(paragraph18);
 
                                             //tambahkan text
-                                            Chunk chunk19 = new Chunk(String.valueOf(document1.getString("jumlah")) +" " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan")))  + " : " + kursIndonesia.format(totalPerItem) , mainFont);
+                                            Chunk chunk19 = new Chunk(String.valueOf(document1.getString("jumlah")) + " " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan"))) + " : " + kursIndonesia.format(totalPerItem), mainFont);
                                             Paragraph paragraph19 = new Paragraph(chunk19);
                                             paragraph18.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph19);
@@ -494,13 +501,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         //tambahkan 1 text
                                         Font statusFont = new Font(fontName, 25.0f, Font.NORMAL, BaseColor.BLACK);
 
-                                        if(cb_lunas.isChecked()){
+                                        if (cb_lunas.isChecked()) {
                                             Chunk chunk13 = new Chunk("*lunas(r)*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
-                                        }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString()+" - kurang "+ kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
+                                        } else {
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString() + " - kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
@@ -511,14 +518,21 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
                                         document.close();
                                         //VIEW PDF DENGAN VIEWER BAWAAN ANDROID
-                                        try{
+                                        try {
+                                            PDFView pdfView = findViewById(R.id.pdfView);
+                                            pdfView.fromFile(new File(path))
+                                                    .enableSwipe(true)
+                                                    .swipeHorizontal(false)
+                                                    .enableDoubletap(true)
+                                                    .defaultPage(0)
+                                                    .load();
                                             //bentuk pdfnya save di path yang sudah kita ambil tadi diatas
-                                            PrintDocumentAdapter printDocumentAdapter = new AdapterPdfDocument(RinciPenjualanActivity.this, path );
+                                            //PrintDocumentAdapter printDocumentAdapter = new AdapterPdfDocument(RinciPenjualanActivity.this, path );
 
                                             //cetakpdf td menggunakkan fitur print di android
-                                            PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
-                                            printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
-                                        }catch (Exception e){
+                                            //PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+                                            //printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
+                                        } catch (Exception e) {
                                             Log.e("X", "err");
                                         }
                                     } catch (DocumentException | IOException e) {
@@ -526,7 +540,8 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Log.w("TAG", "Error getting documents.", task.getException());
-                                };
+                                }
+                                ;
                             }
                         });
             }
@@ -558,7 +573,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         new File(path).delete();
                                     try {
                                         //design isi/kerangka pdfnya
-                                        Document document = new  Document(PageSize.A4);
+                                        Document document = new Document(PageSize.A4);
                                         PdfWriter.getInstance(document, new FileOutputStream(path));
                                         document.open();
 
@@ -585,9 +600,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             imageLogo = Image.getInstance(stream.toByteArray());
                                             imageLogo.scaleAbsolute(30, 30);
                                             imageLogo.setAlignment(Element.ALIGN_CENTER);
-                                        }
-                                        catch(IOException ex)
-                                        {
+                                        } catch (IOException ex) {
                                             return;
                                         }
 
@@ -611,7 +624,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
                                             imgBarcode.setAlignment(Image.ALIGN_LEFT);
-                                        }catch (WriterException e) {
+                                        } catch (WriterException e) {
 
                                             e.printStackTrace();
                                         }
@@ -690,7 +703,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             document.add(paragraph18);
 
                                             //tambahkan text
-                                            Chunk chunk19 = new Chunk(String.valueOf(document1.getString("jumlah")) +" " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan")))  + " : " + kursIndonesia.format(totalPerItem) , mainFont);
+                                            Chunk chunk19 = new Chunk(String.valueOf(document1.getString("jumlah")) + " " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan"))) + " : " + kursIndonesia.format(totalPerItem), mainFont);
                                             Paragraph paragraph19 = new Paragraph(chunk19);
                                             paragraph18.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph19);
@@ -717,13 +730,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         //tambahkan 1 text
                                         Font statusFont = new Font(fontName, 25.0f, Font.NORMAL, BaseColor.BLACK);
 
-                                        if(cb_lunas.isChecked()){
+                                        if (cb_lunas.isChecked()) {
                                             Chunk chunk13 = new Chunk("*lunas(r)*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
-                                        }else{
-                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString()+" - kurang "+ kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "")))+"*", statusFont);
+                                        } else {
+                                            Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString() + " - kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
@@ -806,13 +819,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         }
 
 
-
                                     } catch (DocumentException | IOException e) {
                                         throw new RuntimeException(e);
                                     }
                                 } else {
                                     Log.w("TAG", "Error getting documents.", task.getException());
-                                };
+                                }
+                                ;
                             }
                         });
             }
@@ -835,110 +848,110 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                     alert.setTitle("Cetak Nota");
                     alert.setMessage("Yakin Cetak Nota? Pastikan Sudah Connect Dengan Printer Bluetooth!");
                     alert.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    if(false){
-                                        Toast.makeText(RinciPenjualanActivity.this, "Printer Bluetooth Tidak Terdeteksi!!", Toast.LENGTH_SHORT).show();
-                                    }else {
-                                        Toast.makeText(RinciPenjualanActivity.this, "Printing...", Toast.LENGTH_SHORT).show();
-                                        //PRINT NOTA DIRECT KE PRINTER ESC/POS
-                                        db.collection("rincipenjualan").whereEqualTo("idpenjualan", idpenjualan.trim())
-                                                .get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            EscPosPrinter printer = null;
-                                                            try {
-                                                                printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 48f, 32);
-                                                            } catch (EscPosConnectionException e) {
-                                                                throw new RuntimeException(e);
-                                                            }
-
-                                                            //SIAPKAN LAYOUT NOTA
-                                                            String layout =
-                                                                    "[C]<img>" + PrinterTextParserImg.bitmapToHexadecimalString(printer, RinciPenjualanActivity.this.getResources().getDrawableForDensity(R.drawable.logonota, DisplayMetrics.DENSITY_XXXHIGH)) + "</img> \n" +
-                                                                            "[L]\n" +
-                                                                            "[C]<u><font size='big'>Bintang Telur</font></u>\n" +
-                                                                            "[C]Jl. Puri Cipageran Indah 2, Cimahi \n" +
-//                                                        "[C]--------------------------------\n" +
-                                                                            "[L]<b><font size='tall'>" + tanggaltransaksi + "</font></b>[R]<b>" + namapelanggan + "</b>\n" +
-                                                                            "[L]<b>" + idpenjualan + "</b>\n" +
-                                                                            "[C]--------------------------------\n" +
-                                                                            "[L]\n";
-
-                                                            //loop hasil query rinci penjualan
-                                                            for (QueryDocumentSnapshot document1 : task.getResult()) {
-                                                                Double totalPerItem = Double.valueOf(document1.getString("jumlah")) * Double.valueOf(document1.getString("hargasatuan"));
-
-                                                                //UNTUK KASI SEPARATOR TITIK RUPIAH
-                                                                  DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
-                                                                DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
-                                                                formatRp.setCurrencySymbol(" ");
-                                                                formatRp.setMonetaryDecimalSeparator(',');
-                                                                formatRp.setGroupingSeparator('.');
-                                                                kursIndonesia.setDecimalFormatSymbols(formatRp);
-
-                                                                layout += "[L]<b><font size='tall'>" + document1.getString("namabarang") + "</font></b>\n";
-                                                                layout += "[L]<b><font size='tall'>" + String.valueOf(document1.getString("jumlah")) + " " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan"))) + "" + "</font></b>\n";
-                                                                layout += "[L]<b><font size='tall'>Rp." + kursIndonesia.format(totalPerItem) + "</font></b>\n";
-                                                                layout += "[L]\n";
-
-                                                                totalJumlah += Double.valueOf(document1.getString("jumlah"));
-                                                                totalHarga += totalPerItem;
-                                                            }
-
-                                                            layout += "[C]--------------------------------\n";
-                                                            layout += "[L]\n";
-
-                                                            //UNTUK KASI SEPARATOR TITIK RUPIAH
-                                                            DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
-                                                            DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
-                                                            formatRp.setCurrencySymbol("Rp. ");
-                                                            formatRp.setMonetaryDecimalSeparator(',');
-                                                            formatRp.setGroupingSeparator('.');
-                                                            kursIndonesia.setDecimalFormatSymbols(formatRp);
-
-                                                            //tambahkan 1 text
-                                                            layout += "[R]<b><font size='tall'>" + "TOTAL : " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))) + "</font></b>\n";
-
-                                                            if (cb_lunas.isChecked()) {
-                                                                layout += "[R]<b>" + "*lunas(r)*" + "</b>\n";
-                                                            } else {
-                                                                layout += "[R]*belum lunas(r)*" + "\n";
-                                                                layout += "\n";
-                                                                if(et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("0") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "") == null){
-
-                                                                }else {
-                                                                    layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "</font>\n";
-                                                                    layout += "\n";
-                                                                    layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))))) + "</font>" + "\n";
-                                                                }
-                                                            }
-                                                            totalHarga = 0.0;
-                                                            totalJumlah = 0.0;
-
-                                                            layout += "[R]<qrcode size='7'>" + idpenjualan.toString().trim() + "</qrcode>";
-                                                            layout += "\n";
-
-                                                            try {
-                                                                printer.printFormattedText(layout);
-                                                            } catch (EscPosConnectionException e) {
-                                                                throw new RuntimeException(e);
-                                                            } catch (EscPosParserException e) {
-                                                                throw new RuntimeException(e);
-                                                            } catch (EscPosEncodingException e) {
-                                                                throw new RuntimeException(e);
-                                                            } catch (EscPosBarcodeException e) {
-                                                                throw new RuntimeException(e);
-                                                            }
-                                                        }
-
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (false) {
+                                Toast.makeText(RinciPenjualanActivity.this, "Printer Bluetooth Tidak Terdeteksi!!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RinciPenjualanActivity.this, "Printing...", Toast.LENGTH_SHORT).show();
+                                //PRINT NOTA DIRECT KE PRINTER ESC/POS
+                                db.collection("rincipenjualan").whereEqualTo("idpenjualan", idpenjualan.trim())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    EscPosPrinter printer = null;
+                                                    try {
+                                                        printer = new EscPosPrinter(BluetoothPrintersConnections.selectFirstPaired(), 203, 48f, 32);
+                                                    } catch (EscPosConnectionException e) {
+                                                        throw new RuntimeException(e);
                                                     }
-                                                });
-                                    }
-                                }
-                            });
+
+                                                    //SIAPKAN LAYOUT NOTA
+                                                    String layout =
+                                                            "[C]<img>" + PrinterTextParserImg.bitmapToHexadecimalString(printer, RinciPenjualanActivity.this.getResources().getDrawableForDensity(R.drawable.logonota, DisplayMetrics.DENSITY_XXXHIGH)) + "</img> \n" +
+                                                                    "[L]\n" +
+                                                                    "[C]<u><font size='big'>Bintang Telur</font></u>\n" +
+                                                                    "[C]Jl. Puri Cipageran Indah 2, Cimahi \n" +
+//                                                        "[C]--------------------------------\n" +
+                                                                    "[L]<b><font size='tall'>" + tanggaltransaksi + "</font></b>[R]<b>" + namapelanggan + "</b>\n" +
+                                                                    "[L]<b>" + idpenjualan + "</b>\n" +
+                                                                    "[C]--------------------------------\n" +
+                                                                    "[L]\n";
+
+                                                    //loop hasil query rinci penjualan
+                                                    for (QueryDocumentSnapshot document1 : task.getResult()) {
+                                                        Double totalPerItem = Double.valueOf(document1.getString("jumlah")) * Double.valueOf(document1.getString("hargasatuan"));
+
+                                                        //UNTUK KASI SEPARATOR TITIK RUPIAH
+                                                        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+                                                        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+                                                        formatRp.setCurrencySymbol(" ");
+                                                        formatRp.setMonetaryDecimalSeparator(',');
+                                                        formatRp.setGroupingSeparator('.');
+                                                        kursIndonesia.setDecimalFormatSymbols(formatRp);
+
+                                                        layout += "[L]<b><font size='tall'>" + document1.getString("namabarang") + "</font></b>\n";
+                                                        layout += "[L]<b><font size='tall'>" + String.valueOf(document1.getString("jumlah")) + " " + document1.getString("satuan") + " x @" + kursIndonesia.format(Double.valueOf(document1.getString("hargasatuan"))) + "" + "</font></b>\n";
+                                                        layout += "[L]<b><font size='tall'>Rp." + kursIndonesia.format(totalPerItem) + "</font></b>\n";
+                                                        layout += "[L]\n";
+
+                                                        totalJumlah += Double.valueOf(document1.getString("jumlah"));
+                                                        totalHarga += totalPerItem;
+                                                    }
+
+                                                    layout += "[C]--------------------------------\n";
+                                                    layout += "[L]\n";
+
+                                                    //UNTUK KASI SEPARATOR TITIK RUPIAH
+                                                    DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+                                                    DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+                                                    formatRp.setCurrencySymbol("Rp. ");
+                                                    formatRp.setMonetaryDecimalSeparator(',');
+                                                    formatRp.setGroupingSeparator('.');
+                                                    kursIndonesia.setDecimalFormatSymbols(formatRp);
+
+                                                    //tambahkan 1 text
+                                                    layout += "[R]<b><font size='tall'>" + "TOTAL : " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))) + "</font></b>\n";
+
+                                                    if (cb_lunas.isChecked()) {
+                                                        layout += "[R]<b>" + "*lunas(r)*" + "</b>\n";
+                                                    } else {
+                                                        layout += "[R]*belum lunas(r)*" + "\n";
+                                                        layout += "\n";
+                                                        if (et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("0") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "").equals("") || et_titip.getText().toString().replaceAll("[Rp,.\\s]", "") == null) {
+
+                                                        } else {
+                                                            layout += "[R]<font size='tall'>titip " + kursIndonesia.format(Double.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "</font>\n";
+                                                            layout += "\n";
+                                                            layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))))) + "</font>" + "\n";
+                                                        }
+                                                    }
+                                                    totalHarga = 0.0;
+                                                    totalJumlah = 0.0;
+
+                                                    layout += "[R]<qrcode size='7'>" + idpenjualan.toString().trim() + "</qrcode>";
+                                                    layout += "\n";
+
+                                                    try {
+                                                        printer.printFormattedText(layout);
+                                                    } catch (EscPosConnectionException e) {
+                                                        throw new RuntimeException(e);
+                                                    } catch (EscPosParserException e) {
+                                                        throw new RuntimeException(e);
+                                                    } catch (EscPosEncodingException e) {
+                                                        throw new RuntimeException(e);
+                                                    } catch (EscPosBarcodeException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+
+                                            }
+                                        });
+                            }
+                        }
+                    });
                     alert.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -975,7 +988,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                                         Toast.makeText(RinciPenjualanActivity.this, "Hapus Penjualan Berhasil!", Toast.LENGTH_SHORT).show();
                                                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                                            if(document.getString("idpenjualan").equals(idpenjualan.trim())){
+                                                            if (document.getString("idpenjualan").equals(idpenjualan.trim())) {
                                                                 document.getReference().delete();
                                                                 finish();
                                                             }
@@ -1010,6 +1023,9 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btn_seedetail.performClick();
+        btn_seedetail.setVisibility(View.GONE);
     }
 
 }
