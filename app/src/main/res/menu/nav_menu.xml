@@ -12,15 +12,15 @@
             android:icon="@drawable/pembelian"
             android:title="Penjualan"/>
         <item
-            android:id="@+id/menu_hutang"
-            android:icon="@drawable/laporan"
-            android:title="Hutang"
-            android:visible="true"
-            />
-        <item
             android:id="@+id/menu_pembelian"
             android:icon="@drawable/pembelian"
             android:title="Pembelian"
+            android:visible="true"
+            />
+        <item
+            android:id="@+id/menu_hutang"
+            android:icon="@drawable/print"
+            android:title="Hutang"
             android:visible="true"
             />
 
@@ -51,17 +51,23 @@
         <menu>
             <item
                 android:id="@+id/menu_laporan"
-                android:icon="@drawable/laporan"
+                android:icon="@drawable/calendar"
                 android:title="Laporan"/>
+
             <item
-                android:id="@+id/menu_update"
-                android:icon="@drawable/share"
-                android:title="Update"/>
+                android:id="@+id/menu_keuangan"
+                android:icon="@drawable/calendar"
+                android:title="Keuangan"/>
+
         </menu>
     </item>
     <item
         android:title="Tools" >
         <menu>
+            <item
+                android:id="@+id/menu_update"
+                android:icon="@drawable/share"
+                android:title="Update"/>
             <item
                 android:id="@+id/menu_logout"
                 android:icon="@drawable/logout"

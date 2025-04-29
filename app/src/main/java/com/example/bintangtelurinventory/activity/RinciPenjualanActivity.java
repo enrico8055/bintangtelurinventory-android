@@ -517,21 +517,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                         totalJumlah = 0.0;
 
                                         document.close();
-                                        //VIEW PDF DENGAN VIEWER BAWAAN ANDROID
-                                        try {
-                                            PDFView pdfView = findViewById(R.id.pdfView);
-                                            pdfView.fromFile(new File(path))
-                                                    .enableSwipe(true)
-                                                    .swipeHorizontal(false)
-                                                    .enableDoubletap(true)
-                                                    .defaultPage(0)
-                                                    .load();
-                                            //bentuk pdfnya save di path yang sudah kita ambil tadi diatas
-                                            //PrintDocumentAdapter printDocumentAdapter = new AdapterPdfDocument(RinciPenjualanActivity.this, path );
 
-                                            //cetakpdf td menggunakkan fitur print di android
-                                            //PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
-                                            //printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
+                                        //VIEW PDFNYA
+                                        try {
+                                            Intent intent = new Intent(getApplicationContext(), PDFviewActivity.class);
+                                            intent.putExtra("path", path); // kirim path file ke activity baru
+                                            startActivity(intent);
+
                                         } catch (Exception e) {
                                             Log.e("X", "err");
                                         }
@@ -1023,9 +1015,6 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        btn_seedetail.performClick();
-        btn_seedetail.setVisibility(View.GONE);
     }
 
 }

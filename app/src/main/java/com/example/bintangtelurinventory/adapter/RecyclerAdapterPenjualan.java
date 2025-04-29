@@ -101,45 +101,17 @@ public class RecyclerAdapterPenjualan extends RecyclerView.Adapter<RecyclerAdapt
     public void onBindViewHolder(@NonNull ViewHolder holder,int position) {
         Penjualan curr = penjualans.get(position);
 
-        //ambil semua data rinci penjualan untuk dapat total harga
-        db.collection("rincipenjualan").whereEqualTo("idpenjualan", curr.getIdpenjualan().trim())
-            .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot document1 : task.getResult()) {
-                            Double totalPerItem = Double.valueOf(document1.getString("jumlah")) * Double.valueOf(document1.getString("hargasatuan"));
-                            totalHarga.updateAndGet(v -> v + totalPerItem);
-                        }
-                        //UNTUK KASI SEPARATOR TITIK RUPIAH
-                        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
-                        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
-                        formatRp.setCurrencySymbol("Rp. ");
-                        formatRp.setMonetaryDecimalSeparator(',');
-                        formatRp.setGroupingSeparator('.');
-                        kursIndonesia.setDecimalFormatSymbols(formatRp);
-                        holder.tv_totalharga.setText(kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga))));
-                        totalHarga.set(0.0);
+        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+        formatRp.setCurrencySymbol("Rp. ");
+        formatRp.setMonetaryDecimalSeparator(',');
+        formatRp.setGroupingSeparator('.');
+        kursIndonesia.setDecimalFormatSymbols(formatRp);
 
-
-
-                        //ambil nama pelanggan bedasarkan id pelanggan
-                        db.collection("pelanggan").document(curr.getIdpelanggan().trim())
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        //isikan data ke item textviewnya
-                                        holder.tv_tanggaltransaksi.setText(curr.getTanggaltransaksi().toString());
-                                        holder.tv_namapelanggan.setText(documentSnapshot.getString("nama"));
-                                        holder.tv_idpenjualan.setText(curr.getIdpenjualan());
-                                    }
-                                });
-
-                    }
-                });
-
-
+        holder.tv_totalharga.setText(kursIndonesia.format(Double.valueOf(String.valueOf(curr.getTotal()))));
+        holder.tv_tanggaltransaksi.setText(curr.getTanggaltransaksi().toString());
+        holder.tv_namapelanggan.setText(curr.getNamapelanggan());
+        holder.tv_idpenjualan.setText(curr.getIdpenjualan());
     }
 
 

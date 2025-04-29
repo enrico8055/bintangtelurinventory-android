@@ -312,12 +312,9 @@ public class RinciPembelianActivity extends AppCompatActivity {
 
                                         document.close();
                                         try{
-                                            //bentuk pdfnya save di path yang sudah kita ambil tadi diatas
-                                            PrintDocumentAdapter printDocumentAdapter = new AdapterPdfDocument(RinciPembelianActivity.this, path );
-
-                                            //cetakpdf td menggunakkan fitur print di android
-                                            PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
-                                            printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
+                                            Intent intent = new Intent(getApplicationContext(), PDFviewActivity.class);
+                                            intent.putExtra("path", path); // kirim path file ke activity baru
+                                            startActivity(intent);
                                         }catch (Exception e){
                                             Log.e("X", "err");
                                         }

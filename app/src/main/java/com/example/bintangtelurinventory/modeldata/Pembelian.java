@@ -3,9 +3,9 @@ package com.example.bintangtelurinventory.modeldata;
 import java.util.Date;
 
 public class Pembelian {
-    public String idpembelian;
-    public String tanggaltransaksi;
-    public String idsupplier;
+    public String idpembelian = "";
+    public String tanggaltransaksi = "";
+    public String idsupplier = "";
 
 
     public Pembelian(String idpembelian, String tanggaltransaksi, String idsupplier) {

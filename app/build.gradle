@@ -30,8 +30,8 @@ android {
         applicationId "com.example.bintangtelurinventory"
         minSdk 27
         targetSdk 33
-        versionCode 11
-        versionName "v11"
+        versionCode 12
+        versionName "v12"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

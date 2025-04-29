@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -51,6 +52,9 @@ public class HutangFragment extends Fragment {
     private Runnable searchRunnable;
     private Handler handler = new Handler();
 
+    ProgressBar progressBar;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class HutangFragment extends Fragment {
         btn_scan = view.findViewById(R.id.btn_scan);
         et_search = view.findViewById(R.id.et_search);
         rv_penjualan.setLayoutManager(new LinearLayoutManager(getContext()));
+        progressBar = view.findViewById(R.id.progressBar);
 
         btn_newpenjualan.setVisibility(View.INVISIBLE);
 
@@ -100,6 +105,9 @@ public class HutangFragment extends Fragment {
                     handler.removeCallbacks(searchRunnable); // Remove previous callback if exists
                 }
 
+                rv_penjualan.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+
                 searchRunnable = new Runnable() {
                     @Override
                     public void run() {
@@ -123,9 +131,18 @@ public class HutangFragment extends Fragment {
 
                                             //tampilkan di view
                                             for (QueryDocumentSnapshot document : documents) {
-                                                data.add(new Penjualan(document.getId(), document.getData().get("tanggalpenjualan").toString(), document.getData().get("idpelanggan").toString()));
+                                                String tanggal = document.getData().get("tanggalpenjualan") != null ? document.getData().get("tanggalpenjualan").toString() : "";
+                                                String idPelanggan = document.getData().get("idpelanggan") != null ? document.getData().get("idpelanggan").toString() : "";
+                                                String namaPelanggan = document.getData().get("namapelanggan") != null ? document.getData().get("namapelanggan").toString() : "";
+                                                String total = document.getData().get("total") != null ? document.getData().get("total").toString() : "0";
+                                                String titip = document.getData().get("titip") != null ? document.getData().get("titip").toString() : "0";
+
+                                                data.add(new Penjualan(document.getId(), tanggal, idPelanggan, namaPelanggan, total, titip));
                                             }
                                             adapter.setPenjualans(data);
+
+                                            rv_penjualan.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                     }

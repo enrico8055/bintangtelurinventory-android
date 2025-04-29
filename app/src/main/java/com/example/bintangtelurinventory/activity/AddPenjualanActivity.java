@@ -99,6 +99,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -263,13 +264,19 @@ public class AddPenjualanActivity extends AppCompatActivity {
                             String tglFormatted = firestoreFormat.format(tgl);
                             Timestamp timestamp = new Timestamp(tgl);
 
-                            //INSERT PENJUALAN
+                            //INSERT
+                            double total = 0.0;
+                            for (List<String> e : rinciPenjualan) {
+                                total += Double.parseDouble(e.get(2)) * Double.parseDouble(e.get(0));
+                            }
+
                             Map<String, Object> data = new HashMap<>();
                             data.put("idpelanggan", idpelanggan);
                             data.put("namapelanggan", namapelanggan);
                             data.put("tanggalpenjualan", formatDate(et_tanggal.getText().toString()));
                             data.put("tglpenjualanformatted", tglFormatted);
                             data.put("timestamp", timestamp);
+                            data.put("total", total);
                             data.put("titip", et_titip2.getText().toString().replaceAll("[Rp,.\\s]", ""));
                             if (cb_lunas.isChecked()) {
                                 data.put("lunas", "ya");

@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.fragment.BarangFragment;
 import com.example.bintangtelurinventory.fragment.HutangFragment;
+import com.example.bintangtelurinventory.fragment.KeuanganFragment;
 import com.example.bintangtelurinventory.fragment.LaporanFragment;
 import com.example.bintangtelurinventory.fragment.PelangganFragment;
 import com.example.bintangtelurinventory.fragment.PembelianFragment;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v11", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v12", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //ambil statusapp untuk memastikan apakah app ini sudah usang
-        db.collection("statusApp").whereEqualTo("v11", true)
+        db.collection("statusApp").whereEqualTo("v12", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -209,6 +210,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                 navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
                 toolbar.setTitle("Master Supplier");
+                drawer_layout.close();
+                break;
+            case R.id.menu_keuangan:
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new KeuanganFragment()).commit();
+                navigation_drawer.setCheckedItem(R.id.menu_keuangan);
+                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                toolbar.setTitle("Keuangan");
                 drawer_layout.close();
                 break;
             case R.id.menu_update:

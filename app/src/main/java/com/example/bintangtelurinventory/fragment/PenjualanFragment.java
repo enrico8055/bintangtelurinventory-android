@@ -135,7 +135,13 @@ public class PenjualanFragment extends Fragment {
 
                                             //tampilkan di view
                                             for (QueryDocumentSnapshot document : documents) {
-                                                data.add(new Penjualan(document.getId(), document.getData().get("tanggalpenjualan").toString(), document.getData().get("idpelanggan").toString()));
+                                                String tanggal = document.getData().get("tanggalpenjualan") != null ? document.getData().get("tanggalpenjualan").toString() : "";
+                                                String idPelanggan = document.getData().get("idpelanggan") != null ? document.getData().get("idpelanggan").toString() : "";
+                                                String namaPelanggan = document.getData().get("namapelanggan") != null ? document.getData().get("namapelanggan").toString() : "";
+                                                String total = document.getData().get("total") != null ? document.getData().get("total").toString() : "0";
+                                                String titip = document.getData().get("titip") != null ? document.getData().get("titip").toString() : "0";
+
+                                                data.add(new Penjualan(document.getId(), tanggal, idPelanggan, namaPelanggan, total, titip));
                                             }
                                             adapter.setPenjualans(data);
 
@@ -163,7 +169,13 @@ public class PenjualanFragment extends Fragment {
 
                                             //tampilkan di view
                                             for (QueryDocumentSnapshot document : documents) {
-                                                data.add(new Penjualan(document.getId(), document.getData().get("tanggalpenjualan").toString(), document.getData().get("idpelanggan").toString()));
+                                                String tanggal = document.getData().get("tanggalpenjualan") != null ? document.getData().get("tanggalpenjualan").toString() : "";
+                                                String idPelanggan = document.getData().get("idpelanggan") != null ? document.getData().get("idpelanggan").toString() : "";
+                                                String namaPelanggan = document.getData().get("namapelanggan") != null ? document.getData().get("namapelanggan").toString() : "";
+                                                String total = document.getData().get("total") != null ? document.getData().get("total").toString() : "0";
+                                                String titip = document.getData().get("titip") != null ? document.getData().get("titip").toString() : "0";
+
+                                                data.add(new Penjualan(document.getId(), tanggal, idPelanggan, namaPelanggan, total, titip));
                                             }
                                             adapter.setPenjualans(data);
 
