@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/labelHutang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hutang (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextHutang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/labelCash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uang Cash (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextCash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelBRI"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bank BRI (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextBRI"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelBCA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bank BCA (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextBCA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelTray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uang Tray (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextTray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelTelor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uang Telor (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextTelor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelUtangRicoLama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hutang Rico Lama (-)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextUtangRicoLama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelUtangRicoBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hutang Rico Baru (-)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextUtangRicoBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelUtangVia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hutang Via (-)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextUtangVia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:id="@+id/labelUtangYuni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hutang Cik Yuni (-)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextUtangYuni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp"/>
+
+            <Button
+                android:id="@+id/buttonHitung"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/blue"
+                android:text="Save And Calculate"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal" />
+
+
+            <TextView
+                android:id="@+id/hasilHitung"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rp 20.000.000"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textSize="26sp"
+                android:layout_marginBottom="4dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
