@@ -16,6 +16,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,8 @@ public class KeuanganFragment extends Fragment {
     TextView et_hasil;
     EditText et_hutang, et_cash, et_bri, et_bca, et_tray, et_telor, et_utang_rico_lama, et_utang_rico_baru, et_utang_via, et_utang_yuni;
     Button btn_hitung;
+    ProgressBar progressBar;
+    ScrollView main_sv;
 
     Handler handler = new Handler();
     Runnable delayedAction = null;
@@ -84,101 +88,81 @@ public class KeuanganFragment extends Fragment {
         et_utang_rico_baru = view.findViewById(R.id.editTextUtangRicoBaru);
         et_utang_via = view.findViewById(R.id.editTextUtangVia);
         et_utang_yuni = view.findViewById(R.id.editTextUtangYuni);
+        main_sv = view.findViewById(R.id.main_sv);
+        progressBar = view.findViewById(R.id.progressBar);
 
-        //ambil total hutang
+        main_sv.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        // ambil total hutang hanya sekali
         et_hutang.setEnabled(false);
         db.collection("penjualan")
                 .whereEqualTo("lunas", "belum")
                 .orderBy("lunas", Query.Direction.ASCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        List<Penjualan> data = new ArrayList<>();
-                        double hutang = 0.0;
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    double hutang = 0.0;
 
-                        // Sort berdasarkan nama pelanggan
-                        List<QueryDocumentSnapshot> documents = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : value) {
-                            documents.add(doc);
-                        }
-
-                        // Hitung total hutang
-                        for (QueryDocumentSnapshot document : documents) {
-                            try {
-                                Object totalObj = document.get("total");
-                                double total = 0.0;
-                                if (totalObj instanceof Double) {
-                                    total = (Double) totalObj;
-                                } else if (totalObj instanceof Long) {
-                                    total = ((Long) totalObj).doubleValue();
-                                } else if (totalObj instanceof String) {
-                                    try {
-                                        total = Double.parseDouble((String) totalObj);
-                                    } catch (NumberFormatException e) {
-                                        total = 0.0;  // Default jika konversi gagal
-                                    }
-                                }
-
-                                Object titipObj = document.get("titip");
-                                double titip = 0.0;
-                                if (titipObj instanceof Double) {
-                                    titip = (Double) titipObj;
-                                } else if (titipObj instanceof Long) {
-                                    titip = ((Long) titipObj).doubleValue();
-                                } else if (titipObj instanceof String) {
-                                    try {
-                                        titip = Double.parseDouble((String) titipObj);
-                                    } catch (NumberFormatException e) {
-                                        titip = 0.0;  // Default jika konversi gagal
-                                    }
-                                }
-
-                                hutang += total - titip;
-                            } catch (NumberFormatException e) {
-                                Log.e("ParseError", "Error parsing total/titip in document: " + document.getId(), e);
+                    for (QueryDocumentSnapshot document : querySnapshot) {
+                        try {
+                            double total = 0.0;
+                            Object totalObj = document.get("total");
+                            if (totalObj instanceof Number) {
+                                total = ((Number) totalObj).doubleValue();
+                            } else if (totalObj instanceof String) {
+                                total = Double.parseDouble((String) totalObj);
                             }
-                        }
 
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
-                        formatter.setMaximumFractionDigits(0);
-                        formatter.setMinimumFractionDigits(0);
-                        String formatted = formatter.format(hutang);
-                        et_hutang.setText(formatted);
-                    }
-                });
-
-        //isi data sebelumnya
-        db.collection("keuangan")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            return;
-                        }
-
-                        if (value != null && !value.isEmpty()) {
-                            for (QueryDocumentSnapshot document : value) {
-                                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
-                                formatter.setMaximumFractionDigits(0);
-                                formatter.setMinimumFractionDigits(0);
-
-                                et_cash.setText(formatter.format(document.getDouble("cash")));
-                                et_bri.setText(formatter.format(document.getDouble("bri")));
-                                et_bca.setText(formatter.format(document.getDouble("bca")));
-                                et_tray.setText(formatter.format(document.getDouble("tray")));
-                                et_telor.setText(formatter.format(document.getDouble("telor")));
-                                et_utang_rico_lama.setText(formatter.format(document.getDouble("utangRico")));
-                                et_utang_rico_baru.setText(formatter.format(document.getDouble("utangRicoBaru")));
-                                et_utang_via.setText(formatter.format(document.getDouble("utangVia")));
-                                et_utang_yuni.setText(formatter.format(document.getDouble("utangYuni")));
-
-                                btn_hitung.performClick();
-                                break;
+                            double titip = 0.0;
+                            Object titipObj = document.get("titip");
+                            if (titipObj instanceof Number) {
+                                titip = ((Number) titipObj).doubleValue();
+                            } else if (titipObj instanceof String) {
+                                titip = Double.parseDouble((String) titipObj);
                             }
-                        } else {
+
+                            hutang += total - titip;
+                        } catch (Exception e) {
+                            Log.e("ParseError", "Error parsing total/titip in document: " + document.getId(), e);
                         }
                     }
+
+                    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+                    formatter.setMaximumFractionDigits(0);
+                    formatter.setMinimumFractionDigits(0);
+                    et_hutang.setText(formatter.format(hutang));
+
+
+                    //isi data sebelumnya
+                    db.collection("keuangan")
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (!queryDocumentSnapshots.isEmpty()) {
+                                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                        formatter.setMaximumFractionDigits(0);
+                                        formatter.setMinimumFractionDigits(0);
+
+                                        et_cash.setText(formatter.format(document.getDouble("cash")));
+                                        et_bri.setText(formatter.format(document.getDouble("bri")));
+                                        et_bca.setText(formatter.format(document.getDouble("bca")));
+                                        et_tray.setText(formatter.format(document.getDouble("tray")));
+                                        et_telor.setText(formatter.format(document.getDouble("telor")));
+                                        et_utang_rico_lama.setText(formatter.format(document.getDouble("utangRico")));
+                                        et_utang_rico_baru.setText(formatter.format(document.getDouble("utangRicoBaru")));
+                                        et_utang_via.setText(formatter.format(document.getDouble("utangVia")));
+                                        et_utang_yuni.setText(formatter.format(document.getDouble("utangYuni")));
+
+                                        main_sv.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(View.GONE);
+                                        break;
+                                    }
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Failed to fetch penjualan", e);
                 });
+
 
         //separator input
         setCurrencyTextWatcher(et_cash);
@@ -252,6 +236,10 @@ public class KeuanganFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void populateDataInit() {
+
     }
 
     private void setCurrencyTextWatcher(final EditText editText) {

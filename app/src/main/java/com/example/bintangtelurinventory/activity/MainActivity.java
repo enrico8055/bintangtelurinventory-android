@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v12", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v13", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //ambil statusapp untuk memastikan apakah app ini sudah usang
-        db.collection("statusApp").whereEqualTo("v12", true)
+        db.collection("statusApp").whereEqualTo("v13", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -106,25 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-        // Ambil download URL APK untuk update-nya
-        db.collection("statusApp")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            return;
-                        }
-
-                        if (value != null && !value.isEmpty()) {
-                            for (QueryDocumentSnapshot document : value) {
-                                if (document.contains("download-update-apk-url")) {
-                                    apkUrl = document.getString("download-update-apk-url");
-                                }
-                            }
-                        } else {
-                        }
-                    }
-                });
 
         drawer_layout = findViewById(R.id.drawer_layout);
         navigation_drawer = findViewById(R.id.navigation_drawer);
@@ -157,62 +138,194 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_penjualan: //kalo menu home di pencet maka pasangkan fragment home ke frame layout dan checked nemu home tersebut di navigation drawer
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PenjualanFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_penjualan);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Transaksi Penjualan");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-penjualan") && document.getBoolean("menu-penjualan") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PenjualanFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_penjualan);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Transaksi Penjualan");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
                 break;
             case R.id.menu_hutang:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HutangFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_hutang);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Daftar Hutang");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-hutang") && document.getBoolean("menu-hutang") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HutangFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_hutang);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Daftar Hutang");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_pelanggan:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PelangganFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_pelanggan);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Master Pelanggan");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-pelanggan") && document.getBoolean("menu-pelanggan") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PelangganFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_pelanggan);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Master Pelanggan");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_barang:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new BarangFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_barang);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Master Barang");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-barang") && document.getBoolean("menu-barang") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new BarangFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_barang);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Master Barang");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_laporan:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new LaporanFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_barang);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Laporan");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-laporan") && document.getBoolean("menu-laporan") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new LaporanFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_barang);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Laporan");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_pembelian:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PembelianFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_pembelian);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Transaksi Pembelian");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-pembelian") && document.getBoolean("menu-pembelian") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PembelianFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_pembelian);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Transaksi Pembelian");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_supplier:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SupplierFragment()).commit();
-                navigation_drawer.setCheckedItem(R.id.menu_supplier);
-                navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
-                toolbar.setTitle("Master Supplier");
-                drawer_layout.close();
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-supplier") && document.getBoolean("menu-supplier") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SupplierFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_supplier);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Master Supplier");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
+
                 break;
             case R.id.menu_keuangan:
+                db.collection("statusMenu")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("menu-keuangan") && document.getBoolean("menu-keuangan") == true) {
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new KeuanganFragment()).commit();
+                                        navigation_drawer.setCheckedItem(R.id.menu_keuangan);
+                                        navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                        navigation_drawer.setItemIconTintList(ColorStateList.valueOf(Color.BLACK));
+                                        toolbar.setTitle("Keuangan");
+                                        drawer_layout.close();
+                                    } else {
+                                        Toast.makeText(getBaseContext(), "Sedang Maintenance ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new KeuanganFragment()).commit();
                 navigation_drawer.setCheckedItem(R.id.menu_keuangan);
                 navigation_drawer.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
@@ -222,43 +335,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.menu_update:
                 //DOWNLOAD APK BARUNYA DAN MUNCULKAN POPUP UPDATE KE USER
-                if (apkUrl != null && !apkUrl.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Tunggu bentar lagi download ...", Toast.LENGTH_SHORT).show();
-                    Log.v("enrico", Uri.parse(apkUrl).toString());
+                db.collection("statusApp")
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    if (document.contains("download-update-apk-url")) {
+                                        apkUrl = document.getString("download-update-apk-url");
 
-                    DownloadManager.Request request = new DownloadManager.Request(
-                            Uri.parse(apkUrl)
-                    );
-                    request.setTitle("Downloading Bintang Telur Update");
-                    request.setDescription("Please wait...");
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bt-update.apk");
+                                        if (apkUrl != null && !apkUrl.isEmpty()) {
+                                            Toast.makeText(MainActivity.this, "Tunggu bentar lagi download ...", Toast.LENGTH_SHORT).show();
+                                            Log.v("enrico", Uri.parse(apkUrl).toString());
 
-                    DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                    long downloadId = manager.enqueue(request);
+                                            DownloadManager.Request request = new DownloadManager.Request(
+                                                    Uri.parse(apkUrl)
+                                            );
+                                            request.setTitle("Downloading Bintang Telur Update");
+                                            request.setDescription("Please wait...");
+                                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "bt-update.apk");
 
-                    BroadcastReceiver onComplete = new BroadcastReceiver() {
-                        public void onReceive(Context context, Intent intent) {
-                            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                            if (id == downloadId) {
-                                Uri apkUri = manager.getUriForDownloadedFile(downloadId);
+                                            DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                            long downloadId = manager.enqueue(request);
 
-                                Intent intent2 = new Intent(Intent.ACTION_VIEW);
-                                intent2.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                            BroadcastReceiver onComplete = new BroadcastReceiver() {
+                                                public void onReceive(Context context, Intent intent) {
+                                                    long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                                                    if (id == downloadId) {
+                                                        Uri apkUri = manager.getUriForDownloadedFile(downloadId);
 
-                                context.startActivity(intent2); // Corrected this line
-                                unregisterReceiver(this);
+                                                        Intent intent2 = new Intent(Intent.ACTION_VIEW);
+                                                        intent2.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                                                        intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                                        context.startActivity(intent2); // Corrected this line
+                                                        unregisterReceiver(this);
+                                                    }
+                                                }
+                                            };
+
+                                            registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                                            break;
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Maaf belum ada update terbaru ...", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    };
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Failed to fetch statusApp", e);
+                        });
 
-                    registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                    break;
-                } else {
-                    Toast.makeText(MainActivity.this, "Maaf belum ada update terbaru ...", Toast.LENGTH_SHORT).show();
-
-                }
 
                 break;
 

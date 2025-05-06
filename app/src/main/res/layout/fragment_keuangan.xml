@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_gravity="center" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,7 +20,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:id="@+id/main_sv">
+
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
@@ -36,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:padding="12dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:id="@+id/labelCash"
@@ -53,7 +62,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelBRI"
@@ -70,7 +79,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelBCA"
@@ -87,7 +96,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelTray"
@@ -104,7 +113,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelTelor"
@@ -121,7 +130,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelUtangRicoLama"
@@ -138,7 +147,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelUtangRicoBaru"
@@ -155,7 +164,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelUtangVia"
@@ -172,7 +181,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <TextView
                 android:id="@+id/labelUtangYuni"
@@ -189,7 +198,7 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:text="Rp0"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp" />
 
             <Button
                 android:id="@+id/buttonHitung"
