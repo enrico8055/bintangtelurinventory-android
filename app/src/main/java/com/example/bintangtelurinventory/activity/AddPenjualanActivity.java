@@ -391,6 +391,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
 
                                                                                                     if (cb_lunas.isChecked()) {
                                                                                                         layout += "[R]<b>" + "*lunas*" + "</b>\n";
+                                                                                                        layout += "[R]<b>" + "TERIMA KASIH" + "</b>\n";
                                                                                                     } else {
                                                                                                         layout += "[R]*belum lunas*" + "\n";
                                                                                                         layout += "\n";

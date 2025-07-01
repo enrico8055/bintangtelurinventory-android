@@ -505,7 +505,6 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             Chunk chunk13 = new Chunk("*lunas(r)*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
-                                            document.add(paragraph13);
                                         } else {
                                             Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString() + " - kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
@@ -909,6 +908,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
                                                     if (cb_lunas.isChecked()) {
                                                         layout += "[R]<b>" + "*lunas(r)*" + "</b>\n";
+                                                        layout += "[R]<b>" + "TERIMA KASIH" + "</b>\n";
                                                     } else {
                                                         layout += "[R]*belum lunas(r)*" + "\n";
                                                         layout += "\n";
