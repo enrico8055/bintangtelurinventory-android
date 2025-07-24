@@ -193,7 +193,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot document = task.getResult();
-                        String titip = NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(document.getString("titip")));
+                        String titip;
+                        if (document.getString("titip").equals("")) {
+                            titip = NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble("0"));
+                            et_titip.setText("0");
+                        } else {
+                            titip = NumberFormat.getNumberInstance(new Locale("in", "ID")).format(Double.parseDouble(document.getString("titip")));
+                        }
                         if (titip == null) {
                             et_titip.setText("0");
                         } else {
