@@ -55,12 +55,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class KeuanganFragment extends Fragment {
 
     TextView et_hasil;
-    EditText et_hutang, et_cash, et_bri, et_bca, et_tray, et_telor, et_utang_rico_lama, et_utang_rico_baru, et_utang_via, et_utang_yuni;
+    EditText et_hutang, et_cash, et_bri, et_bca, et_tray, et_sisacairan, et_investasi, et_telor, et_utang_rico_lama, et_utang_rico_baru, et_utang_via, et_utang_yuni;
     Button btn_hitung;
     ProgressBar progressBar;
     ScrollView main_sv;
@@ -83,6 +84,8 @@ public class KeuanganFragment extends Fragment {
         et_bri = view.findViewById(R.id.editTextBRI);
         et_bca = view.findViewById(R.id.editTextBCA);
         et_tray = view.findViewById(R.id.editTextTray);
+        et_investasi = view.findViewById(R.id.editTextInvestasi);
+        et_sisacairan = view.findViewById(R.id.editTextSisaCairan);
         et_telor = view.findViewById(R.id.editTextTelor);
         et_utang_rico_lama = view.findViewById(R.id.editTextUtangRicoLama);
         et_utang_rico_baru = view.findViewById(R.id.editTextUtangRicoBaru);
@@ -146,6 +149,8 @@ public class KeuanganFragment extends Fragment {
                                         et_bri.setText(formatter.format(document.getDouble("bri")));
                                         et_bca.setText(formatter.format(document.getDouble("bca")));
                                         et_tray.setText(formatter.format(document.getDouble("tray")));
+                                        et_investasi.setText(formatter.format(Objects.requireNonNullElse(document.getDouble("investasi"), 0.0)));
+                                        et_sisacairan.setText(formatter.format(Objects.requireNonNullElse(document.getDouble("sisacairan"), 0.0)));
                                         et_telor.setText(formatter.format(document.getDouble("telor")));
                                         et_utang_rico_lama.setText(formatter.format(document.getDouble("utangRico")));
                                         et_utang_rico_baru.setText(formatter.format(document.getDouble("utangRicoBaru")));
@@ -169,6 +174,8 @@ public class KeuanganFragment extends Fragment {
         setCurrencyTextWatcher(et_bri);
         setCurrencyTextWatcher(et_bca);
         setCurrencyTextWatcher(et_tray);
+        setCurrencyTextWatcher(et_investasi);
+        setCurrencyTextWatcher(et_sisacairan);
         setCurrencyTextWatcher(et_telor);
         setCurrencyTextWatcher(et_utang_rico_lama);
         setCurrencyTextWatcher(et_utang_rico_baru);
@@ -184,6 +191,8 @@ public class KeuanganFragment extends Fragment {
                 double bri = Double.parseDouble(et_bri.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 double bca = Double.parseDouble(et_bca.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 double tray = Double.parseDouble(et_tray.getText().toString().replaceAll("[Rp,.\\s]", ""));
+                double investasi = Double.parseDouble(et_investasi.getText().toString().replaceAll("[Rp,.\\s]", ""));
+                double sisacairan = Double.parseDouble(et_sisacairan.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 double telor = Double.parseDouble(et_telor.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 double hutang = Double.parseDouble(et_hutang.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 //pengurangan
@@ -192,7 +201,7 @@ public class KeuanganFragment extends Fragment {
                 double via = Double.parseDouble(et_utang_via.getText().toString().replaceAll("[Rp,.\\s]", ""));
                 double yuni = Double.parseDouble(et_utang_yuni.getText().toString().replaceAll("[Rp,.\\s]", ""));
 
-                double hasil = hutang + cash + bri + bca + tray + telor - rico_lama - rico_baru - via - yuni;
+                double hasil = hutang + cash + bri + bca + tray + investasi + sisacairan + telor - rico_lama - rico_baru - via - yuni;
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
                 formatter.setMaximumFractionDigits(0);
                 formatter.setMinimumFractionDigits(0);
@@ -212,6 +221,8 @@ public class KeuanganFragment extends Fragment {
                                         "bca", bca,
                                         "bri", bri,
                                         "tray", tray,
+                                        "investasi", investasi,
+                                        "sisacairan", sisacairan,
                                         "utangRico", rico_lama,
                                         "utangRicoBaru", rico_baru,
                                         "utangVia", via,

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Pelanggan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -93,7 +94,7 @@ public class LaporanFragment extends Fragment {
         lv_laporan.setAdapter(arrayAdapter);
 
         //ambil semua data pelanggan untuk isi spinner
-        db.collection("pelanggan").orderBy("nama", Query.Direction.ASCENDING)
+        db.collection("pelanggan").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId()).orderBy("nama", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -160,9 +161,9 @@ public class LaporanFragment extends Fragment {
 
 
                     tv_judullaporan.setText("Laporan " + namapelanggan + ":");
-                    Log.v("enrico2", idpelanggan);
 
                     db.collection("penjualan")
+                            .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                             .whereGreaterThanOrEqualTo("timestamp", timestampawal) // Filter by start date
                             .whereLessThanOrEqualTo("timestamp", timestampakhir) // Filter by end date
                             .get()
@@ -248,6 +249,7 @@ public class LaporanFragment extends Fragment {
 
 
                     db.collection("penjualan")
+                            .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                             .whereGreaterThanOrEqualTo("timestamp", timestampawal) // Filter by start date
                             .whereLessThanOrEqualTo("timestamp", timestampakhir) // Filter by end date
                             .get()
@@ -263,6 +265,7 @@ public class LaporanFragment extends Fragment {
 
                                     for (QueryDocumentSnapshot document1 : task.getResult()) {
                                         countJmlPenjualan[0]++;
+                                        Log.d("laporan", "ID penjualan..." + document1.getId());
                                         tasks.add(db.collection("rincipenjualan")
                                                 .whereEqualTo("idpenjualan", document1.getId()) // Fetch only matching rincian
                                                 .get());
@@ -279,15 +282,20 @@ public class LaporanFragment extends Fragment {
                                             if (!rincipenjualanTask.isSuccessful()) continue;
 
                                             for (QueryDocumentSnapshot document2 : rincipenjualanTask.getResult()) {
+                                                Log.d("laporan", "Rinci penjualan..." + document2.getId());
+
                                                 String namaBarang = document2.getString("namabarang");
                                                 if (namaBarang != null && (namaBarang.toLowerCase().contains("telur") || namaBarang.toLowerCase().contains("telor"))) {
                                                     double jumlah = Double.parseDouble(document2.getString("jumlah"));
                                                     double harga = Double.parseDouble(document2.getString("hargasatuan"));
+                                                    Log.d("laporan", "jumlah " + jumlah + " x harga " + harga);
                                                     totalPenjualan += jumlah * harga;
                                                     totalTelur += jumlah;
                                                 }
                                             }
                                         }
+
+
 
                                         tv_tempData.setText(String.valueOf(totalPenjualan));
                                         tv_tempData2.setText(String.valueOf(totalTelur));
@@ -304,6 +312,10 @@ public class LaporanFragment extends Fragment {
                                         datalaporan.add("Total Hasil Penjualan Telur: " + kursIndonesia.format(totalPenjualan));
                                         datalaporan.add("Total Telur Terjual : " + totalTelur + "kg");
                                         datalaporan.add("Total Transaksi Penjualan : " + countJmlPenjualan[0] + "x");
+
+                                        Log.d("laporan","Total Hasil Penjualan Telur: " + kursIndonesia.format(totalPenjualan));
+                                        Log.d("laporan","Total Telur Terjual : " + totalTelur + "kg");
+                                        Log.d("laporan","Total Transaksi Penjualan : " + countJmlPenjualan[0] + "x");
 
                                         arrayAdapter.notifyDataSetChanged();
                                     });
@@ -356,6 +368,7 @@ public class LaporanFragment extends Fragment {
 
 
                     db.collection("pembelian")
+                            .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                             .whereGreaterThanOrEqualTo("timestamp", timestampawal) // Filter by start date
                             .whereLessThanOrEqualTo("timestamp", timestampakhir) // Filter by end date
                             .get()

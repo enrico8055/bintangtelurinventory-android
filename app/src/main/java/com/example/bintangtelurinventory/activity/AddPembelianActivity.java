@@ -32,6 +32,7 @@ import com.example.bintangtelurinventory.dialogfragment.AddRinciPembelianDialogF
 import com.example.bintangtelurinventory.dialogfragment.AddRinciPenjualanDialogFragment;
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.adapter.AdapterPdfDocument;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Pelanggan;
 import com.example.bintangtelurinventory.modeldata.Supplier;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -122,7 +123,7 @@ public class AddPembelianActivity extends AppCompatActivity {
         et_tanggal.setText(formatter.format(date));
 
         //ambil semua data supplier untuk isi spinner
-        db.collection("supplier").orderBy("nama", Query.Direction.ASCENDING)
+        db.collection("supplier").whereEqualTo("uuid", SharedPrefManager.getInstance(AddPembelianActivity.this).getUserId()).orderBy("nama", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -192,6 +193,7 @@ public class AddPembelianActivity extends AppCompatActivity {
                             //INSERT PEMBELIAN
                             Map<String, Object> data = new HashMap<>();
                             data.put("idsupplier", idsupplier);
+                            data.put("uuid", SharedPrefManager.getInstance(AddPembelianActivity.this).getUserId());
                             data.put("namasupplier", namasupplier);
                             data.put("tanggalpembelian", formatDate(et_tanggal.getText().toString()));
                             data.put("tglpembelianformatted", tglFormatted);
@@ -205,6 +207,7 @@ public class AddPembelianActivity extends AppCompatActivity {
                                             //INSERT RINCI PEMBELIAN
                                             rincipembelian.forEach((e) -> {
                                                 Map<String, Object> data1 = new HashMap<>();
+                                                data1.put("uuid", SharedPrefManager.getInstance(AddPembelianActivity.this).getUserId());
                                                 data1.put("hargasatuan", e.get(0));
                                                 data1.put("idbarang", e.get(1));
                                                 data1.put("idpembelian", documentReference1.getId().toString());

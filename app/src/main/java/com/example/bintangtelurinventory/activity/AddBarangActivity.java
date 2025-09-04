@@ -13,15 +13,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.bintangtelurinventory.R;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Length;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddBarangActivity extends AppCompatActivity implements Validator.ValidationListener{
@@ -75,7 +81,11 @@ public class AddBarangActivity extends AppCompatActivity implements Validator.Va
     public void onValidationSucceeded() {
         //INSERT PELANGGAN
         Map<String, Object> data = new HashMap<>();
+        Date tgl = new Date();
+        com.google.firebase.Timestamp timestamp = new com.google.firebase.Timestamp(tgl);
+        data.put("timestamp", timestamp);
         data.put("namabarang", et_namabarang.getText().toString());
+        data.put("uuid", SharedPrefManager.getInstance(AddBarangActivity.this).getUserId());
         // Add a new document with a generated ID
         db.collection("barang")
                 .add(data)

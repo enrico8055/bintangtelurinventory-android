@@ -25,6 +25,7 @@ import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
 import com.example.bintangtelurinventory.activity.RinciPenjualanActivity;
 import com.example.bintangtelurinventory.activity.ScanBarcodeActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterPenjualan;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Penjualan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
@@ -115,6 +116,7 @@ public class PenjualanFragment extends Fragment {
                     public void run() {
                         if (et_search.getText().toString().contains("/")) {//ambil semua data penjualan berdasar tanggal
                             db.collection("penjualan")
+                                    .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                                     .whereGreaterThanOrEqualTo("tanggalpenjualan", et_search.getText().toString()) // Filter by start date
                                     .whereLessThanOrEqualTo("tanggalpenjualan", et_search.getText().toString())
                                     .orderBy("tanggalpenjualan", Query.Direction.ASCENDING)
@@ -151,6 +153,7 @@ public class PenjualanFragment extends Fragment {
                                     });
                         }else{ //ambil data penjualan berdasar id document
                             db.collection("penjualan")
+                                    .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                                     .whereEqualTo(FieldPath.documentId(), et_search.getText().toString())
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @Override

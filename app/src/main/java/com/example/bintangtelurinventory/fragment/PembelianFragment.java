@@ -27,6 +27,7 @@ import com.example.bintangtelurinventory.activity.RinciPenjualanActivity;
 import com.example.bintangtelurinventory.activity.ScanBarcodeActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterPembelian;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterPenjualan;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Pembelian;
 import com.example.bintangtelurinventory.modeldata.Penjualan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -114,6 +115,7 @@ public class PembelianFragment extends Fragment {
                     public void run() {
                         if (et_search.getText().toString().contains("/")) {//ambil semua data pembelian berdasar tanggal
                             db.collection("pembelian")
+                                    .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                                     .whereGreaterThanOrEqualTo("tanggalpembelian", et_search.getText().toString()) // Filter by start date
                                     .whereLessThanOrEqualTo("tanggalpembelian", et_search.getText().toString())
                                     .orderBy("tanggalpembelian", Query.Direction.ASCENDING)
@@ -121,6 +123,13 @@ public class PembelianFragment extends Fragment {
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             List<Pembelian> data = new ArrayList<Pembelian>();
+
+                                            if (value == null || value.isEmpty()) {
+                                                rv_pembelian.setVisibility(View.VISIBLE);
+                                                progressBar.setVisibility(View.GONE);
+                                                adapter.setPembelians(new ArrayList<>());
+                                                return;
+                                            }
 
                                             //sort berdasar nama supplier
                                             List<QueryDocumentSnapshot> documents = new ArrayList<>();
@@ -144,11 +153,19 @@ public class PembelianFragment extends Fragment {
                                     });
                         }else{ //ambil data pembelian berdasar id document
                             db.collection("pembelian")
+                                    .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                                     .whereEqualTo(FieldPath.documentId(), et_search.getText().toString())
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                             List<Pembelian> data = new ArrayList<Pembelian>();
+
+                                            if (value == null || value.isEmpty()) {
+                                                rv_pembelian.setVisibility(View.VISIBLE);
+                                                progressBar.setVisibility(View.GONE);
+                                                adapter.setPembelians(new ArrayList<>());
+                                                return;
+                                            }
 
                                             //sort berdasar nama supplier
                                             List<QueryDocumentSnapshot> documents = new ArrayList<>();

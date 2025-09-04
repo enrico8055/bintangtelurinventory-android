@@ -21,10 +21,12 @@ import android.widget.Toast;
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPembelianActivity;
 import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Barang;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -67,7 +69,7 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
         et_satuan = view.findViewById(R.id.et_satuan);
 
         //ambil semua data barang untuk isi spinner
-        db.collection("barang")
+        db.collection("barang").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId()).orderBy("namabarang", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

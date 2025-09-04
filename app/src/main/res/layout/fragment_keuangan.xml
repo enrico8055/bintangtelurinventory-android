@@ -123,8 +123,43 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="4dp" />
 
+
             <EditText
                 android:id="@+id/editTextTelor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/labelInvestasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uang Investasi (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextInvestasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:padding="12dp"
+                android:text="Rp0"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/labelSisaCairan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Uang SisaCairan (+)"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/editTextSisaCairan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"

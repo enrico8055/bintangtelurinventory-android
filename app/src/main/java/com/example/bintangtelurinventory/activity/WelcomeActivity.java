@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.bintangtelurinventory.R;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -170,7 +172,18 @@ public class WelcomeActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     et_email.setText("");
                                     et_password.setText("");
-                                    //buuka activity
+
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        String uid = user.getUid();
+                                        String email = user.getEmail();
+
+                                        SharedPrefManager.getInstance(WelcomeActivity.this).saveUser(uid, email);
+
+
+                                    }
+
+                                    //bu3ka activity
                                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();

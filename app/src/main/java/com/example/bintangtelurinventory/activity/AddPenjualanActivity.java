@@ -51,6 +51,7 @@ import com.dantsu.escposprinter.textparser.PrinterTextParserImg;
 import com.example.bintangtelurinventory.dialogfragment.AddRinciPenjualanDialogFragment;
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.adapter.AdapterPdfDocument;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Pelanggan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -150,7 +151,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
         et_tanggal.setText(formatter.format(date));
 
         //ambil semua data pelanggan untuk isi spinner
-        db.collection("pelanggan").orderBy("nama", Query.Direction.ASCENDING)
+        db.collection("pelanggan").whereEqualTo("uuid", SharedPrefManager.getInstance(AddPenjualanActivity.this).getUserId()).orderBy("nama", Query.Direction.ASCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -271,6 +272,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
                             }
 
                             Map<String, Object> data = new HashMap<>();
+                            data.put("uuid", SharedPrefManager.getInstance(AddPenjualanActivity.this).getUserId());
                             data.put("idpelanggan", idpelanggan);
                             data.put("namapelanggan", namapelanggan);
                             data.put("tanggalpenjualan", formatDate(et_tanggal.getText().toString()));
@@ -292,6 +294,7 @@ public class AddPenjualanActivity extends AppCompatActivity {
                                             //INSERT RINCI PENJUALAN
                                             rinciPenjualan.forEach((e) -> {
                                                 Map<String, Object> data1 = new HashMap<>();
+                                                data1.put("uuid", SharedPrefManager.getInstance(AddPenjualanActivity.this).getUserId());
                                                 data1.put("hargasatuan", e.get(0));
                                                 data1.put("idbarang", e.get(1));
                                                 data1.put("idpenjualan", documentReference1.getId().toString());

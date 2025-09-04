@@ -25,6 +25,7 @@ import com.example.bintangtelurinventory.activity.AddBarangActivity;
 import com.example.bintangtelurinventory.activity.AddSupplierActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterBarang;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterSupplier;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Barang;
 import com.example.bintangtelurinventory.modeldata.Supplier;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,7 +62,7 @@ public class SupplierFragment extends Fragment {
         rv_supplier.setAdapter(adapter);
 
         //ambil semua data barang
-        db.collection("supplier").orderBy("nama", Query.Direction.ASCENDING)
+        db.collection("supplier").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -147,7 +148,7 @@ public class SupplierFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                db.collection("supplier")
+                db.collection("supplier").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

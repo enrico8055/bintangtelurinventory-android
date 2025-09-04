@@ -19,6 +19,7 @@ import com.example.bintangtelurinventory.activity.EditPelangganActivity;
 import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddPelangganActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterPelanggan;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Pelanggan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.EventListener;
@@ -52,7 +53,7 @@ public class PelangganFragment extends Fragment {
         rv_pelanggan.setAdapter(adapter);
 
         //ambil semua data pelanggan
-        db.collection("pelanggan").orderBy("nama", Query.Direction.ASCENDING)
+        db.collection("pelanggan").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -94,7 +95,7 @@ public class PelangganFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //ambil semua data pelanggan
-                db.collection("pelanggan")
+                db.collection("pelanggan").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

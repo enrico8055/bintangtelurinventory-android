@@ -25,6 +25,7 @@ import com.example.bintangtelurinventory.R;
 import com.example.bintangtelurinventory.activity.AddBarangActivity;
 import com.example.bintangtelurinventory.activity.EditPelangganActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterBarang;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Barang;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,10 +62,15 @@ public class BarangFragment extends Fragment {
         rv_barang.setAdapter(adapter);
 
         //ambil semua data barang
-        db.collection("barang").orderBy("namabarang", Query.Direction.ASCENDING)
+        db.collection("barang").whereIn("uuid", Arrays.asList(SharedPrefManager.getInstance(getActivity()).getUserId())).orderBy("namabarang", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value == null || value.isEmpty()) {
+                            adapter.setBarangs(new ArrayList<>());
+                            return;
+                        }
+
                         List<Barang> data = new ArrayList<Barang>();
                         for (QueryDocumentSnapshot document : value) {
                             data.add(new Barang(document.getId(), document.getData().get("namabarang").toString()));
@@ -146,7 +153,7 @@ public class BarangFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                db.collection("barang")
+                db.collection("barang").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

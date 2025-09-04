@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bintangtelurinventory.R;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +21,7 @@ import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Length;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +77,11 @@ public class AddSupplierActivity extends AppCompatActivity implements Validator.
     public void onValidationSucceeded() {
         //INSERT PELANGGAN
         Map<String, Object> data = new HashMap<>();
+        Date tgl = new Date();
+        com.google.firebase.Timestamp timestamp = new com.google.firebase.Timestamp(tgl);
+        data.put("timestamp", timestamp);
         data.put("nama", et_namasupplier.getText().toString());
+        data.put("uuid", SharedPrefManager.getInstance(AddSupplierActivity.this).getUserId());
         // Add a new document with a generated ID
         db.collection("supplier")
                 .add(data)

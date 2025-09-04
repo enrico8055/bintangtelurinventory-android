@@ -23,6 +23,7 @@ import com.example.bintangtelurinventory.activity.AddPenjualanActivity;
 import com.example.bintangtelurinventory.activity.RinciPenjualanActivity;
 import com.example.bintangtelurinventory.activity.ScanBarcodeActivity;
 import com.example.bintangtelurinventory.adapter.RecyclerAdapterHutang;
+import com.example.bintangtelurinventory.helper.SharedPrefManager;
 import com.example.bintangtelurinventory.modeldata.Penjualan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.EventListener;
@@ -112,6 +113,7 @@ public class HutangFragment extends Fragment {
                     @Override
                     public void run() {
                             db.collection("penjualan")
+                                    .whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId())
                                     .whereEqualTo("lunas", "belum")
                                     .orderBy("lunas", Query.Direction.ASCENDING)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
