@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v13.1", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v14", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //ambil statusapp untuk memastikan apakah app ini sudah usang
-        db.collection("statusApp").whereEqualTo("v13", true)
+        db.collection("statusApp").whereEqualTo("v14", true)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
