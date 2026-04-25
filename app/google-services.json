@@ -3,9 +3,49 @@
     "project_number": "366260561772",
     "firebase_url": "https://bintangtelurinventory-default-rtdb.firebaseio.com",
     "project_id": "bintangtelurinventory",
-    "storage_bucket": "bintangtelurinventory.appspot.com"
+    "storage_bucket": "bintangtelurinventory.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366260561772:android:b8a05b013f0835ed987549",
+        "android_client_info": {
+          "package_name": "com.app.bintangtelurinventory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366260561772-4a1agfmi7thti4v8mn0htp8akjpd6261.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bintangtelurinventory",
+            "certificate_hash": "a5aa2c1beb47e02de93eff1bb25f88ffcb0c106a"
+          }
+        },
+        {
+          "client_id": "366260561772-6t8dldje5prb98qlbt1pf1uhj9uslh55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_nwZGgx19GFDIOt-0wcxlm3aG_iA3myo"
+        },
+        {
+          "current_key": "AIzaSyC3wv2fPfwgXDKhLh3bMqnt7FCjgqVMx8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366260561772-6t8dldje5prb98qlbt1pf1uhj9uslh55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:366260561772:android:a064b61ec55547f9987549",
@@ -23,49 +63,15 @@
           }
         },
         {
-          "client_id": "366260561772-fh4coef31t9foqqu852pve0cpjmnctrq.apps.googleusercontent.com",
+          "client_id": "366260561772-6t8dldje5prb98qlbt1pf1uhj9uslh55.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC3wv2fPfwgXDKhLh3bMqnt7FCjgqVMx8c"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "366260561772-fh4coef31t9foqqu852pve0cpjmnctrq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:366260561772:android:19008703e7d0602a987549",
-        "android_client_info": {
-          "package_name": "com.example.bintangtelurinventory"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "366260561772-f2qr1mdui25v2o7lhi7c3atnf3e917jr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.bintangtelurinventory",
-            "certificate_hash": "d89cdd25e4039142eb5d7b67fe8c771e58a68d9c"
-          }
+          "current_key": "AIzaSyA_nwZGgx19GFDIOt-0wcxlm3aG_iA3myo"
         },
         {
-          "client_id": "366260561772-fh4coef31t9foqqu852pve0cpjmnctrq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
           "current_key": "AIzaSyC3wv2fPfwgXDKhLh3bMqnt7FCjgqVMx8c"
         }
       ],
@@ -73,7 +79,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "366260561772-fh4coef31t9foqqu852pve0cpjmnctrq.apps.googleusercontent.com",
+              "client_id": "366260561772-6t8dldje5prb98qlbt1pf1uhj9uslh55.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

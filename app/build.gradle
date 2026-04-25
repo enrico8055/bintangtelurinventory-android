@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.bintangtelurinventory'
+    namespace 'com.app.bintangtelurinventory'
     compileSdk 33
 
     configurations.all {
@@ -27,11 +27,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.bintangtelurinventory"
+        applicationId "com.app.bintangtelurinventory"
         minSdk 27
         targetSdk 33
-        versionCode 14
-        versionName "v14"
+        versionCode 15
+        versionName "v15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

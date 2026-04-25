@@ -94,7 +94,7 @@
             android:value="barcode" /> <!-- permission file provider reader -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.bintangtelurinventory.provider"
+            android:authorities="com.app.bintangtelurinventory.provider"
 
             android:exported="false"
             android:grantUriPermissions="true">
