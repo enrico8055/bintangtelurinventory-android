@@ -1,5 +1,6 @@
 package com.app.bintangtelurinventory.dialogfragment;
 
+import android.icu.text.DecimalFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -44,9 +45,11 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
     Spinner sp_barang;
     String namabarang;
     String idbarang;
+    boolean isUpdatingAutoCountIkat = false;
+
     private Validator validator;
     @Length(min = 1)
-    EditText et_hargasatuan, et_jumlah;
+    EditText et_hargasatuan, et_jumlah, et_jumlah_ikat;
     @Length(min = 1, trim = true)
     EditText et_satuan;
 
@@ -66,6 +69,7 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
         et_hargasatuan = view.findViewById(R.id.et_hargasatuan);
         et_jumlah = view.findViewById(R.id.et_jumlah);
         et_satuan = view.findViewById(R.id.et_satuan);
+        et_jumlah_ikat = view.findViewById(R.id.et_jumlah_ikat);
 
         //ambil semua data barang untuk isi spinner
         db.collection("barang").whereEqualTo("uuid", SharedPrefManager.getInstance(getActivity()).getUserId()).orderBy("namabarang", Query.Direction.ASCENDING)
@@ -137,6 +141,81 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
             }
         });
 
+
+        //otomatis hitung ikatnya terhadap kg dan sebaliknya
+        DecimalFormat df = new DecimalFormat("#.##");
+// KG → IKAT
+        et_jumlah.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdatingAutoCountIkat) return;
+
+                String input = s.toString().trim();
+
+                isUpdatingAutoCountIkat = true;
+
+                if (input.isEmpty() || !input.matches("\\d+(\\.\\d+)?")) {
+                    if (!et_jumlah_ikat.getText().toString().equals("")) {
+                        et_jumlah_ikat.setText("");
+                    }
+                } else {
+                    double kg = Double.parseDouble(input);
+                    double ikat = kg / 15;
+                    String result = df.format(ikat);
+
+                    if (!et_jumlah_ikat.getText().toString().equals(result)) {
+                        et_jumlah_ikat.setText(result);
+                    }
+                }
+
+                isUpdatingAutoCountIkat = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
+// IKAT → KG
+        et_jumlah_ikat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdatingAutoCountIkat) return;
+
+                String input = s.toString().trim();
+
+                isUpdatingAutoCountIkat = true;
+
+                if (input.isEmpty() || !input.matches("\\d+(\\.\\d+)?")) {
+                    if (!et_jumlah.getText().toString().equals("")) {
+                        et_jumlah.setText("");
+                    }
+                } else {
+                    double ikat = Double.parseDouble(input);
+                    double kg = ikat * 15;
+                    String result = df.format(kg);
+
+                    if (!et_jumlah.getText().toString().equals(result)) {
+                        et_jumlah.setText(result);
+                    }
+                }
+
+                isUpdatingAutoCountIkat = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override

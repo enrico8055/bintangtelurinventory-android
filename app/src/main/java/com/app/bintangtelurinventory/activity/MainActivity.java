@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v15", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v15.3", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //secara default pilih dan tampilkan fragment home di framelayout
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HutangFragment()).commit();
-            navigation_drawer.setCheckedItem(R.id.menu_hutang);
-            toolbar.setTitle("Hutang");
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new PenjualanFragment()).commit();
+            navigation_drawer.setCheckedItem(R.id.menu_penjualan);
+            toolbar.setTitle("Penjualan");
         }
     }
 

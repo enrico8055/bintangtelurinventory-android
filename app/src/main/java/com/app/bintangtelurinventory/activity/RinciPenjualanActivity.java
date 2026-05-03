@@ -862,7 +862,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                     String layout =
                                                             "[C]<img>" + PrinterTextParserImg.bitmapToHexadecimalString(printer, RinciPenjualanActivity.this.getResources().getDrawableForDensity(R.drawable.logonota, DisplayMetrics.DENSITY_XXXHIGH)) + "</img> \n" +
                                                                     "[L]\n" +
-                                                                    "[C]<u><font size='big'>Bintang Telur</font></u>\n" +
+                                                                    //"[C]<u><font size='big'>Bintang Telur</font></u>\n" +
                                                                     "[C]Jl. Puri Cipageran Indah 2, Cimahi \n" +
 //                                                        "[C]--------------------------------\n" +
                                                                     "[L]<b><font size='tall'>" + tanggaltransaksi + "</font></b>[R]<b>" + namapelanggan + "</b>\n" +
