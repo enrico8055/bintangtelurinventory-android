@@ -402,7 +402,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
                                         //tambahkan 1 text
                                         Font titleFont = new Font(fontName, 30.0f, Font.BOLD, BaseColor.BLACK);
-                                        Chunk chunk1 = new Chunk("BINTANG TELUR", titleFont);
+                                        Chunk chunk1 = new Chunk("", titleFont);
                                         Paragraph paragraph1 = new Paragraph(chunk1);
                                         paragraph1.setAlignment(Element.ALIGN_CENTER);
 
@@ -622,7 +622,7 @@ public class RinciPenjualanActivity extends AppCompatActivity {
 
                                         //tambahkan 1 text
                                         Font titleFont = new Font(fontName, 30.0f, Font.BOLD, BaseColor.BLACK);
-                                        Chunk chunk1 = new Chunk("BINTANG TELUR", titleFont);
+                                        Chunk chunk1 = new Chunk("", titleFont);
                                         Paragraph paragraph1 = new Paragraph(chunk1);
                                         paragraph1.setAlignment(Element.ALIGN_CENTER);
 

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "v15.3", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "v15.5", Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
 

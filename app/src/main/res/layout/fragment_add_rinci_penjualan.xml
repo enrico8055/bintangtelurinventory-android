@@ -69,6 +69,21 @@
             android:inputType="number" />
 
         <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jumlah (ikat per 15kg) :" />
+
+        <EditText
+            android:id="@+id/et_jumlah_ikat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:inputType="number|numberDecimal" />
+
+
+        <TextView
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,19 +97,6 @@
             android:ems="10"
             android:inputType="number|numberDecimal" />
 
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Jumlah (ikat per 15kg) :" />
-
-        <EditText
-            android:id="@+id/et_jumlah_ikat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:inputType="number|numberDecimal" />
 
         <LinearLayout
             android:layout_width="match_parent"

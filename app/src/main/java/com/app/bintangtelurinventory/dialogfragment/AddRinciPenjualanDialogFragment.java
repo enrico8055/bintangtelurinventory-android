@@ -144,7 +144,7 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
 
         //otomatis hitung ikatnya terhadap kg dan sebaliknya
         DecimalFormat df = new DecimalFormat("#.##");
-// KG → IKAT
+        // KG → IKAT
         et_jumlah.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -181,7 +181,7 @@ public class AddRinciPenjualanDialogFragment extends DialogFragment implements V
         });
 
 
-// IKAT → KG
+        // IKAT → KG
         et_jumlah_ikat.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
