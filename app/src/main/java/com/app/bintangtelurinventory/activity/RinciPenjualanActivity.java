@@ -87,7 +87,9 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -504,12 +506,20 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             Chunk chunk13 = new Chunk("*lunas(r)*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
+                                            document.add(paragraph13);
                                         } else {
                                             Chunk chunk13 = new Chunk("*belum lunas(r) -" + " titip " + et_titip.getText().toString() + " - kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))) + "*", statusFont);
                                             Paragraph paragraph13 = new Paragraph(chunk13);
                                             paragraph13.setAlignment(Element.ALIGN_RIGHT);
                                             document.add(paragraph13);
                                         }
+
+                                        //waktu cetak
+                                        Font waktucetakFont = new Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK);
+                                        Chunk chunk14 = new Chunk(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()), waktucetakFont);
+                                        Paragraph paragraph13 = new Paragraph(chunk14);
+                                        paragraph13.setAlignment(Element.ALIGN_RIGHT);
+                                        document.add(paragraph13);
 
                                         totalHarga = 0.0;
                                         totalJumlah = 0.0;
@@ -732,6 +742,13 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                             document.add(paragraph13);
                                         }
 
+                                        //waktu cetak
+                                        Font waktucetakFont = new Font(fontName, 20.0f, Font.NORMAL, BaseColor.BLACK);
+                                        Chunk chunk14 = new Chunk(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()), waktucetakFont);
+                                        Paragraph paragraph13 = new Paragraph(chunk14);
+                                        paragraph13.setAlignment(Element.ALIGN_RIGHT);
+                                        document.add(paragraph13);
+
                                         totalHarga = 0.0;
                                         totalJumlah = 0.0;
 
@@ -919,6 +936,9 @@ public class RinciPenjualanActivity extends AppCompatActivity {
                                                             layout += "[R]<font size='tall'>kurang " + kursIndonesia.format(Double.valueOf(String.valueOf(Double.valueOf(String.valueOf(totalHarga)) - Integer.valueOf(et_titip.getText().toString().replaceAll("[Rp,.\\s]", ""))))) + "</font>" + "\n";
                                                         }
                                                     }
+                                                    layout += "\n";
+                                                    layout += "[R]<b>" + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "</b>\n";
+
                                                     totalHarga = 0.0;
                                                     totalJumlah = 0.0;
 

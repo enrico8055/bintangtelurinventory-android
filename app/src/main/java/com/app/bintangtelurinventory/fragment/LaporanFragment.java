@@ -179,7 +179,7 @@ public class LaporanFragment extends Fragment {
 
                                     // 🔹 Step 2: Process `rincipenjualan` Data Efficiently
                                     Tasks.whenAllComplete(tasks).addOnCompleteListener(t -> {
-                                        double totalPenjualan = 0.0, totalTelur = 0.0;
+                                        double totalPenjualan = 0.0, totalTelur = 0.0, totalTelurPuyuh = 0.0, totalTelurOmega = 0.0;
 
                                         for (Task<QuerySnapshot> rincipenjualanTask : tasks) {
                                             if (!rincipenjualanTask.isSuccessful()) continue;
@@ -191,6 +191,14 @@ public class LaporanFragment extends Fragment {
                                                     double harga = Double.parseDouble(document2.getString("hargasatuan"));
                                                     totalPenjualan += jumlah * harga;
                                                     totalTelur += jumlah;
+                                                }
+                                                if (namaBarang != null && (namaBarang.toLowerCase().contains("puyuh"))) {
+                                                    double jumlah = Double.parseDouble(document2.getString("jumlah"));
+                                                    totalTelurPuyuh += jumlah;
+                                                }
+                                                if (namaBarang != null && (namaBarang.toLowerCase().contains("omega"))) {
+                                                    double jumlah = Double.parseDouble(document2.getString("jumlah"));
+                                                    totalTelurOmega += jumlah;
                                                 }
                                             }
                                         }
@@ -209,6 +217,8 @@ public class LaporanFragment extends Fragment {
 
                                         datalaporan.add("Total Hasil Penjualan Telur: " + kursIndonesia.format(totalPenjualan));
                                         datalaporan.add("Total Telur Terjual : " + totalTelur + "kg");
+                                        datalaporan.add("Total Telur Puyuh Terjual : " + totalTelurPuyuh + "kg");
+                                        datalaporan.add("Total Telur Omega Terjual : " + totalTelurOmega + "kg");
                                         datalaporan.add("Total Transaksi Penjualan : " + countJmlPenjualan[0] + "x");
 
                                         arrayAdapter.notifyDataSetChanged();
@@ -265,7 +275,7 @@ public class LaporanFragment extends Fragment {
 
                                     // 🔹 Step 2: Process `rincipenjualan` Data Efficiently
                                     Tasks.whenAllComplete(tasks).addOnCompleteListener(t -> {
-                                        double totalPenjualan = 0.0, totalTelur = 0.0;
+                                        double totalPenjualan = 0.0, totalTelur = 0.0, totalTelurPuyuh = 0.0, totalTelurOmega = 0.0;
 
                                         Log.d("laporan", "Mulai perhitungan rinci penjualan...");
 
@@ -283,6 +293,14 @@ public class LaporanFragment extends Fragment {
                                                     Log.d("laporan", "jumlah " + jumlah + " x harga " + harga);
                                                     totalPenjualan += jumlah * harga;
                                                     totalTelur += jumlah;
+                                                }
+                                                if (namaBarang != null && (namaBarang.toLowerCase().contains("puyuh"))) {
+                                                    double jumlah = Double.parseDouble(document2.getString("jumlah"));
+                                                    totalTelurPuyuh += jumlah;
+                                                }
+                                                if (namaBarang != null && (namaBarang.toLowerCase().contains("omega"))) {
+                                                    double jumlah = Double.parseDouble(document2.getString("jumlah"));
+                                                    totalTelurOmega += jumlah;
                                                 }
                                             }
                                         }
@@ -302,6 +320,8 @@ public class LaporanFragment extends Fragment {
 
                                         datalaporan.add("Total Hasil Penjualan Telur: " + kursIndonesia.format(totalPenjualan));
                                         datalaporan.add("Total Telur Terjual : " + totalTelur + "kg");
+                                        datalaporan.add("Total Telur Puyuh Terjual : " + totalTelurPuyuh + "kg");
+                                        datalaporan.add("Total Telur Omega Terjual : " + totalTelurOmega + "kg");
                                         datalaporan.add("Total Transaksi Penjualan : " + countJmlPenjualan[0] + "x");
 
                                         Log.d("laporan", "Total Hasil Penjualan Telur: " + kursIndonesia.format(totalPenjualan));
